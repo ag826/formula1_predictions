@@ -1,7 +1,3 @@
-
-#### DROP HIGHLY CORRELATED COLUMNS
-
-
 import pandas as pd
 import numpy as np
 from sklearn.model_selection import train_test_split
@@ -14,12 +10,9 @@ from xgboost import XGBClassifier
 
 # ========== 1. Load and Prepare Data ==========
 df = pd.read_csv("/kaggle/input/final-data/final_data.csv")
+df=df[["DriverNumber","GridPosition","Status","RACEYEAR","RACENUMBER","IsWinnerFlag","RACE_AirTemp_mean","RACE_AirTemp_min","RACE_AirTemp_max","RACE_Humidity_mean","RACE_Humidity_min","RACE_Humidity_max","RACE_Pressure_mean","RACE_Pressure_min","RACE_Pressure_max","RACE_Rainfall_max","RACE_TrackTemp_mean","RACE_TrackTemp_min","RACE_TrackTemp_max","RACE_WindDirection_mean","RACE_WindSpeed_mean","RACE_WindSpeed_max","AvgPitStopDuration_ms","TotalPitStops","RACE_AvgTyreLife_HARD","RACE_AvgTyreLife_INTERMEDIATE","RACE_AvgTyreLife_MEDIUM","RACE_AvgTyreLife_SOFT","RACE_AvgTyreLife_UNKNOWN","RACE_AvgTyreLife_WET","RACE_AvgSpeedOnTyre_HARD","RACE_AvgSpeedOnTyre_INTERMEDIATE","RACE_AvgSpeedOnTyre_MEDIUM","RACE_AvgSpeedOnTyre_SOFT","RACE_AvgSpeedOnTyre_UNKNOWN","RACE_AvgSpeedOnTyre_WET","RACE_AvgLapTimeOnTyre_HARD","RACE_AvgLapTimeOnTyre_INTERMEDIATE","RACE_AvgLapTimeOnTyre_MEDIUM","RACE_AvgLapTimeOnTyre_SOFT","RACE_AvgLapTimeOnTyre_UNKNOWN","RACE_AvgLapTimeOnTyre_WET","RACE_Red","RACE_SCDeployed","RACE_VSCDeployed","RACE_Yellow","fast","medium","slow","TotalCorners"]]
 X = df.drop(columns=['IsWinnerFlag'])
 y = df['IsWinnerFlag']
-
-
-
-
 
 # ========== 2. Train/Val/Test Split ==========
 X_trainval, X_test, y_trainval, y_test = train_test_split(
@@ -65,16 +58,23 @@ model.fit(
 
 # ========== 5. Feature Importance ==========
 # Get feature importance
+# Get feature importances and names
 feature_importance = model.feature_importances_
+feature_names = preprocessor.transformers_[0][1].get_feature_names_out(categorical_cols).tolist() + numerical_cols
 
-# Plot feature importance
-plt.figure(figsize=(10, 20))
-plt.barh(range(len(feature_importance)), feature_importance, align='center')
-plt.yticks(range(len(feature_importance)), preprocessor.transformers_[0][1].get_feature_names_out(categorical_cols).tolist() + numerical_cols)
+# Combine and sort
+importances_with_names = sorted(zip(feature_importance, feature_names), reverse=True)[:30]
+top_importance, top_names = zip(*importances_with_names)
+
+# Plot top 20
+plt.figure(figsize=(10, 8))
+plt.barh(range(len(top_importance)), top_importance, align='center')
+plt.yticks(range(len(top_names)), top_names)
+plt.gca().invert_yaxis()  # highest importance on top
 plt.xlabel('Feature Importance')
-plt.title('Feature Importance from XGBoost Model')
+plt.title('Top 20 Feature Importances from XGBoost Model')
+plt.tight_layout()
 plt.show()
-
 # ========== 6. Evaluation ==========
 y_test_pred = model.predict(X_test_enc)
 y_test_proba = model.predict_proba(X_test_enc)[:, 1]

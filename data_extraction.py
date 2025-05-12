@@ -6,12 +6,13 @@ from datetime import datetime
 
 # Create the cache directory if it doesn't exist
 os.makedirs("f1_cache", exist_ok=True)
+os.makedirs("RACE_DATA", exist_ok=True)  # Ensure output folder exists
 
 # Enable FastF1 cache
 fastf1.Cache.enable_cache("f1_cache")
 
 # Define session types
-session_types = ["R"]  # Add more types if needed: ["FP1", "FP2", "FP3", "Q", "SQ", "SS", "R"]
+session_types = ["R"]  # You can add more types: ["FP1", "FP2", "FP3", "Q", "SQ", "SS", "R"]
 
 # Initialize containers
 all_results = []
@@ -19,14 +20,14 @@ all_weather = []
 all_track_status = []
 all_laps = []
 all_corners = []
-
+all_event_metadata = []
 
 # ---------------------------------------------------
 # Sourcing Race Data
 # ---------------------------------------------------
 
 # Year range
-for year in range(2023, 2025):
+for year in range(2023, 2026):
     schedule = fastf1.get_event_schedule(year, include_testing=False)
     race_numbers = schedule["RoundNumber"].dropna().astype(int)
 
@@ -78,6 +79,16 @@ for year in range(2023, 2025):
                     df["SESSIONTYPE"] = stype
                     all_corners.append(df)
 
+                # 6. session.event metadata
+                try:
+                    event_data = pd.DataFrame([dict(session.event)])  # Convert to dict first, then wrap in a list for DataFrame
+                    event_data["RACEYEAR"] = year
+                    event_data["RACENUMBER"] = rnd
+                    event_data["SESSIONTYPE"] = stype
+                    all_event_metadata.append(event_data)
+                except Exception as e:
+                    print(f"⚠️ Failed to extract event metadata for {year} Round {rnd} Session {stype}: {e}")
+
             except Exception as e:
                 print(f"⚠️ Skipped {year} Round {rnd} Session {stype}: {e}")
 
@@ -92,5 +103,7 @@ if all_laps:
     pd.concat(all_laps).to_csv("RACE_DATA/R_lap_data.csv", index=False)
 if all_corners:
     pd.concat(all_corners).to_csv("RACE_DATA/R_track_structure.csv", index=False)
+if all_event_metadata:
+    pd.concat(all_event_metadata).to_csv("All_session_event_data.csv", index=False)
 
 print("✅ All requested session data saved to CSV.")

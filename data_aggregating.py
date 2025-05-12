@@ -20,9 +20,10 @@ full_race_results["Time"] = pd.to_timedelta(full_race_results["Time"], errors='c
 full_race_results["Time"] = full_race_results["Time"].dt.total_seconds() * 1000
 
 
-# ---------------------------------------------------
-# Race Winners and benchmark pace
-# ---------------------------------------------------
+
+##################################################################################################################
+# RACE WINNER AND BENCHMARK PACE
+##################################################################################################################
 
 # Filtering for only completed: EDGE CASE (those who got disqualified)
 everyone_who_completed=full_race_results[full_race_results["Status"]=="Finished"]
@@ -42,9 +43,10 @@ race_pace["Racepace"]=race_pace["Time"]/race_pace["WinnerTime"]
 
 race_pace["IsWinnerFlag"]=(race_pace["Time"]==race_pace["WinnerTime"]).astype(int)
 
-# ---------------------------------------------------
+
+##################################################################################################################
 # WEATHER DATA
-# ---------------------------------------------------
+##################################################################################################################
 
 full_weather_data=pd.read_csv("RACE_DATA/R_weather_data.csv")
 
@@ -67,11 +69,12 @@ agg_weather_data.columns = [
 final_race_data=race_pace.merge(agg_weather_data, on=['RACEYEAR', 'RACENUMBER'], how="left")
 
 
-# ---------------------------------------------------
-# DRIVING CHARACTERISTICS
-# ---------------------------------------------------
 
-# -------------- Avg sector 1/2/3 speed
+##################################################################################################################
+# DRIVING CHARACTERISTICS
+##################################################################################################################
+
+# ---------------------------------------------------------------------------------------------------------------- Avg sector 1/2/3 speed
 
 full_lap_data=pd.read_csv("RACE_DATA/R_lap_data.csv")
 
@@ -94,7 +97,7 @@ avg_sector_times = (
     )
 ) 
 
-# -------------- Avg pit time per race and number of pitstops
+# ---------------------------------------------------------------------------------------------------------------- Avg pit time per race and number of pitstops
 
 full_lap_data["PitOutTime"] = pd.to_timedelta(full_lap_data["PitOutTime"], errors='coerce')
 full_lap_data["PitOutTime"] = full_lap_data["PitOutTime"].dt.total_seconds() * 1000
@@ -146,7 +149,7 @@ final_race_data=final_race_data.merge(pit_summary, left_on=['RACEYEAR', 'RACENUM
 # if driver does not pit at all (DNS, DNF) then there will be no values for pit, so row mismatch with sector data
 
 
-# -------------- Avg tyre life SML / Avg speed on SML tyres
+# ---------------------------------------------------------------------------------------------------------------- Avg tyre life SML / Avg speed on SML tyres
 
 tyre_stats = (
     full_lap_data
@@ -169,9 +172,9 @@ tyre_stats_pivot = tyre_stats_pivot.reset_index()
 final_race_data=final_race_data.merge(tyre_stats_pivot, left_on=['RACEYEAR', 'RACENUMBER', 'Abbreviation'], right_on=['RACEYEAR', 'RACENUMBER', 'Driver'], how="left" )
 
 
-# ---------------------------------------------------
+##################################################################################################################
 # TRACK STATUS DATA
-# ---------------------------------------------------
+##################################################################################################################
 
 track_status_data=pd.read_csv("RACE_DATA/R_track_status.csv")
 
@@ -186,10 +189,7 @@ agg_track_status=agg_track_status[["RACEYEAR","RACENUMBER","Red","SCDeployed","V
 agg_track_status.columns=["RACEYEAR","RACENUMBER","RACE_Red","RACE_SCDeployed","RACE_VSCDeployed","RACE_Yellow"]
 final_race_data=final_race_data.merge(agg_track_status, on=['RACEYEAR', 'RACENUMBER'], how="left")
 
-
-# ----------------------------------------------------------------------------------------------------------------Add race time of day here (?)
-
-# ----------------------------------------------------------------------------------------------------------------Add track information here (?)
+# ---------------------------------------------------------------------------------------------------------------- Track Information here
 
 full_track_corners=pd.read_csv("RACE_DATA/R_track_structure.csv")
 full_track_corners['CornerCategory'] = full_track_corners['Angle'].abs().apply(lambda x: 'slow' if x > 90 else 'medium' if x > 60 else 'fast')
@@ -206,9 +206,56 @@ agg_track_corners['TotalCorners'] = agg_track_corners[['slow', 'medium', 'fast']
 
 final_race_data=final_race_data.merge(agg_track_corners, on=['RACEYEAR', 'RACENUMBER'], how="left")
 
-# ---------------------------------------------------
+
+##################################################################################################################
+# SESSION SCHEDULE INFORMATION
+##################################################################################################################
+
+schedule_data=pd.read_csv("All_session_event_data.csv")
+schedule_data=schedule_data[['Country', 'Location', 'OfficialEventName',
+       'EventName', 'EventFormat', 'Session1', 'Session1Date',
+       'Session1DateUtc', 'Session2', 'Session2Date', 'Session2DateUtc',
+       'Session3', 'Session3Date', 'Session3DateUtc', 'Session4',
+       'Session4Date', 'Session4DateUtc', 'Session5', 'Session5Date',
+       'Session5DateUtc','RACEYEAR', 'RACENUMBER']]
+
+def classify_time_of_day(hour):
+    if 5 <= hour < 12:
+        return 'morning'
+    elif 12 <= hour < 17:
+        return 'afternoon'
+    elif 17 <= hour < 21:
+        return 'evening'
+    else:
+        return 'night'
+
+for i in range(1, 6):
+    col = f'Session{i}Date'
+    if col in schedule_data.columns:
+        # Convert to datetime, allowing for timezones
+        schedule_data[col] = pd.to_datetime(schedule_data[col], errors='coerce')
+
+        # If timezone-aware, convert to naive (localize to None)
+        if pd.api.types.is_datetime64tz_dtype(schedule_data[col]):
+            schedule_data[col] = schedule_data[col].dt.tz_convert(None)
+
+        # Re-check if it's datetimelike (guard clause)
+        if not pd.api.types.is_datetime64_any_dtype(schedule_data[col]):
+            print(f"⚠️ Skipping {col}: not datetime after processing.")
+            continue
+
+        # Extract hour
+        schedule_data[f'Session{i}Hour'] = schedule_data[col].dt.hour
+
+        # Classify into time of day
+        schedule_data[f'Session{i}TimeOfDay'] = schedule_data[f'Session{i}Hour'].apply(
+            lambda x: classify_time_of_day(x) if pd.notnull(x) else None
+        )
+
+
+##################################################################################################################
 # Correlation Matrix
-# ---------------------------------------------------
+##################################################################################################################
 
 correlation_matrix = final_race_data.corr(numeric_only=True)
 plt.figure(figsize=(30, 30))
