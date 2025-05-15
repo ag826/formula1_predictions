@@ -1,6 +1,6 @@
 # 🏎️ Formula 1 Predictions
 
-This repository aims to analyze and predict Formula 1 race outcomes by leveraging historical data, weather conditions, tyre strategies, and driver performance metrics. The project is currently under active development, and contributions are welcome.
+This repository aims to analyze and predict Formula 1 race outcomes by leveraging historical data, weather conditions, tyre strategies, and driver performance metrics. The project uses machine learning to predict race winners based on practice session data.
 
 ## 📌 Project Overview
 
@@ -8,8 +8,33 @@ This project focuses on:
 
 - **Data Integration**: Combining race results, lap times, weather data, tyre information, and track characteristics.
 - **Feature Engineering**: Creating meaningful features such as average sector times, pit stop durations, tyre performance metrics, and track status indicators.
-- **Predictive Modeling**: Developing machine learning models to predict race outcomes and driver performances.
-- **Visualization**: Generating insightful plots and correlation matrices to understand relationships between variables.
+- **Machine Learning**: Using XGBoost for binary classification to predict race winners.
+- **Model Evaluation**: Comprehensive evaluation using ROC curves, confusion matrices, and feature importance analysis.
+- **Visualization**: Generating insightful plots and analysis of model performance.
+
+## 🤖 Machine Learning Model
+
+The project implements a binary classification model to predict race winners:
+
+### Model Architecture
+- **Algorithm**: XGBoost Classifier
+- **GPU Support**: Automatic detection and utilization of GPU if available
+- **Class Balancing**: Implemented using `scale_pos_weight`
+- **Hyperparameter Tuning**: RandomizedSearchCV with cross-validation
+
+### Feature Processing
+- **Categorical Features**: One-hot encoding with unknown category handling
+- **Numerical Features**: Standard scaling
+- **Missing Values**: Forward and backward filling strategies
+
+### Model Evaluation
+The model evaluation process includes:
+- Training, validation, and test set performance metrics
+- ROC curves and AUC scores
+- Confusion matrices
+- Feature importance analysis
+- SHAP (SHapley Additive exPlanations) values
+
 
 ## 📊 Features and Engineering
 
@@ -23,23 +48,20 @@ The project performs extensive feature engineering, including:
 - **Track Status Events**: Counting occurrences of safety cars, virtual safety cars, and yellow/red flags.
 - **Track Characteristics**: Analyzing corner types and distributions.
 
-## 📈 Visualizations
-
-The analysis includes generating:
-
-- **Correlation Matrices**: Heatmaps showing correlations between numerical variables.
-- **Target Variable Correlations**: Highlighting relationships between the target variable (e.g., finishing position) and other features.
-
-## 📅 Session Schedule Processing
-
-Session times are parsed and categorized into time-of-day segments (morning, afternoon, evening, night) to capture temporal effects on performance.
 
 ## 🛠️ Future Work
 
-- **Model Development**: Implement machine learning models for predictive analysis.
-- **Data Expansion**: Incorporate additional seasons and data sources.
-- **Real-time Predictions**: Develop capabilities for live race predictions.
-- **Web Interface**: Create a user-friendly dashboard for visualization and interaction.
+- **Model Improvements**: 
+  - Experiment with different algorithms
+  - Implement ensemble methods
+  - Fine-tune hyperparameters further
+- **Data Expansion**: Incorporate additional seasons and data sources
+- **Real-time Predictions**: Develop capabilities for live race predictions
+- **Web Interface**: Create a user-friendly dashboard for visualization and interaction
+- **Feature Engineering**:
+  - Develop more sophisticated track characteristic features
+  - Create compound features from existing predictors
+  - Incorporate historical performance trends
 
 ## 🤝 Contributing
 
@@ -48,4 +70,8 @@ Contributions are welcome! Please fork the repository and submit a pull request 
 ## 📄 License
 
 This project is licensed under the [MIT License](LICENSE).
+
+## 📊 Model Performance
+
+For detailed model performance metrics and visualizations, check the `MODEL_EVALUATION` directory after running the prediction script.
 

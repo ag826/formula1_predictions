@@ -5,7 +5,7 @@ from datetime import datetime
 
 # Create the cache directory if it doesn't exist
 os.makedirs("f1_cache", exist_ok=True)
-os.makedirs("FP3_DATA", exist_ok=True)
+os.makedirs("RAW_DATA/FP3_DATA", exist_ok=True)
 
 # Enable FastF1 cache
 fastf1.Cache.enable_cache("f1_cache")
@@ -66,10 +66,10 @@ for year in range(2023, 2026):
 
 # Save to CSV files
 if all_weather:
-    pd.concat(all_weather).to_csv("FP3_DATA/FP3_weather_data.csv", index=False)
+    pd.concat(all_weather).to_csv("RAW_DATA/FP3_DATA/FP3_weather_data.csv", index=False)
 if all_track_status:
-    pd.concat(all_track_status).to_csv("FP3_DATA/FP3_track_status.csv", index=False)
+    pd.concat(all_track_status).to_csv("RAW_DATA/FP3_DATA/FP3_track_status.csv", index=False)
 if all_laps:
-    pd.concat(all_laps).to_csv("FP3_DATA/FP3_lap_data.csv", index=False)
+    pd.concat(all_laps).to_csv("RAW_DATA/FP3_DATA/FP3_lap_data.csv", index=False)
 
 print("✅ All requested FP3 session data saved to CSV.") 

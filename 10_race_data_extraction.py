@@ -6,7 +6,7 @@ from datetime import datetime
 
 # Create the cache directory if it doesn't exist
 os.makedirs("f1_cache", exist_ok=True)
-os.makedirs("RACE_DATA", exist_ok=True)  # Ensure output folder exists
+os.makedirs("RAW_DATA/RACE_DATA", exist_ok=True)  # Ensure output folder exists
 
 # Enable FastF1 cache
 fastf1.Cache.enable_cache("f1_cache")
@@ -94,16 +94,16 @@ for year in range(2023, 2026):
 
 # Save to CSV files
 if all_results:
-    pd.concat(all_results).to_csv("RACE_DATA/R_race_results.csv", index=False)
+    pd.concat(all_results).to_csv("RAW_DATA/RACE_DATA/R_race_results.csv", index=False)
 if all_weather:
-    pd.concat(all_weather).to_csv("RACE_DATA/R_weather_data.csv", index=False)
+    pd.concat(all_weather).to_csv("RAW_DATA/RACE_DATA/R_weather_data.csv", index=False)
 if all_track_status:
-    pd.concat(all_track_status).to_csv("RACE_DATA/R_track_status.csv", index=False)
+    pd.concat(all_track_status).to_csv("RAW_DATA/RACE_DATA/R_track_status.csv", index=False)
 if all_laps:
-    pd.concat(all_laps).to_csv("RACE_DATA/R_lap_data.csv", index=False)
+    pd.concat(all_laps).to_csv("RAW_DATA/RACE_DATA/R_lap_data.csv", index=False)
 if all_corners:
-    pd.concat(all_corners).to_csv("RACE_DATA/R_track_structure.csv", index=False)
+    pd.concat(all_corners).to_csv("RAW_DATA/RACE_DATA/R_track_structure.csv", index=False)
 if all_event_metadata:
-    pd.concat(all_event_metadata).to_csv("All_session_event_data.csv", index=False)
+    pd.concat(all_event_metadata).to_csv("RAW_DATA/All_session_event_data.csv", index=False)
 
 print("✅ All requested session data saved to CSV.")

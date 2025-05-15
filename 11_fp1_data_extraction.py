@@ -5,14 +5,14 @@ from datetime import datetime
 
 # Create the cache directory if it doesn't exist
 os.makedirs("f1_cache", exist_ok=True)
-os.makedirs("FP2_DATA", exist_ok=True)
+os.makedirs("RAW_DATA/FP1_DATA", exist_ok=True)
 # os.makedirs("FP3_DATA", exist_ok=True)
 
 # Enable FastF1 cache
 fastf1.Cache.enable_cache("f1_cache")
 
 # Define session types
-session_types = ["FP2"]  # Changed to FP2
+session_types = ["FP1"]  # Changed to FP2
 
 # Initialize containers
 all_results = []
@@ -67,10 +67,10 @@ for year in range(2023, 2026):
 
 # Save to CSV files
 if all_weather:
-    pd.concat(all_weather).to_csv("FP2_DATA/FP2_weather_data.csv", index=False)
+    pd.concat(all_weather).to_csv("RAW_DATA/FP1_DATA/FP1_weather_data.csv", index=False)
 if all_track_status:
-    pd.concat(all_track_status).to_csv("FP2_DATA/FP2_track_status.csv", index=False)
+    pd.concat(all_track_status).to_csv("RAW_DATA/FP1_DATA/FP1_track_status.csv", index=False)
 if all_laps:
-    pd.concat(all_laps).to_csv("FP2_DATA/FP2_lap_data.csv", index=False)
+    pd.concat(all_laps).to_csv("RAW_DATA/FP1_DATA/FP1_lap_data.csv", index=False)
 
-print("✅ All requested FP2 session data saved to CSV.")
+print("✅ All requested FP1 session data saved to CSV.")
