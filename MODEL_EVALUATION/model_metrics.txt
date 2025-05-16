@@ -1,0 +1,62 @@
+Model Performance Metrics
+==================================================
+
+Training Set Metrics:
+--------------------
+
+Classification Report:
+              precision    recall  f1-score   support
+
+           0       1.00      1.00      1.00       592
+           1       0.94      1.00      0.97        31
+
+    accuracy                           1.00       623
+   macro avg       0.97      1.00      0.98       623
+weighted avg       1.00      1.00      1.00       623
+
+ROC AUC Score: 1.0000
+
+Confusion Matrix:
+                 Predicted Negative  Predicted Positive
+Actual Negative       590                2
+Actual Positive       0                31
+
+Validation Set Metrics:
+--------------------
+
+Classification Report:
+              precision    recall  f1-score   support
+
+           0       0.96      0.97      0.97       197
+           1       0.44      0.36      0.40        11
+
+    accuracy                           0.94       208
+   macro avg       0.70      0.67      0.68       208
+weighted avg       0.94      0.94      0.94       208
+
+ROC AUC Score: 0.8099
+
+Confusion Matrix:
+                 Predicted Negative  Predicted Positive
+Actual Negative       192                5
+Actual Positive       7                4
+
+Test Set Metrics:
+--------------------
+
+Classification Report:
+              precision    recall  f1-score   support
+
+           0       0.98      0.98      0.98       198
+           1       0.60      0.60      0.60        10
+
+    accuracy                           0.96       208
+   macro avg       0.79      0.79      0.79       208
+weighted avg       0.96      0.96      0.96       208
+
+ROC AUC Score: 0.7919
+
+Confusion Matrix:
+                 Predicted Negative  Predicted Positive
+Actual Negative       194                4
+Actual Positive       4                6
