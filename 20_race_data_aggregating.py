@@ -10,7 +10,7 @@ import matplotlib.pyplot as plt
 from dateutil import parser
 
 
-full_race_results=pd.read_csv("RACE_DATA/R_race_results.csv")
+full_race_results=pd.read_csv("RAW_DATA/RACE_DATA/R_race_results.csv")
 
 full_race_results=full_race_results[['DriverNumber', 'BroadcastName', 'Abbreviation',
        'DriverId', 'TeamName', 'TeamId', 'CountryCode', 'Position',
@@ -44,12 +44,14 @@ race_pace["Racepace"]=race_pace["Time"]/race_pace["WinnerTime"]
 
 race_pace["IsWinnerFlag"]=(race_pace["Time"]==race_pace["WinnerTime"]).astype(int)
 
+# Initialize final_race_data with race results
+final_race_data = race_pace
 
 ##################################################################################################################
 # WEATHER DATA
 ##################################################################################################################
 
-full_weather_data=pd.read_csv("RACE_DATA/R_weather_data.csv")
+full_weather_data = pd.read_csv("RAW_DATA/RACE_DATA/R_weather_data.csv")
 
 agg_weather_data = full_weather_data.groupby(['RACEYEAR', 'RACENUMBER']).agg({
     'AirTemp': ['mean', 'min', 'max'],
@@ -67,7 +69,10 @@ agg_weather_data.columns = [
     for col in agg_weather_data.columns
 ]
 
-final_race_data=race_pace.merge(agg_weather_data, on=['RACEYEAR', 'RACENUMBER'], how="left")
+agg_weather_data = agg_weather_data.drop("RACE_SESSIONTYPE_first", axis=1)
+
+# Merge weather data into race results (weather is race-level, not driver-level)
+final_race_data = final_race_data.merge(agg_weather_data, on=['RACEYEAR', 'RACENUMBER'], how="left")
 
 
 
@@ -77,8 +82,9 @@ final_race_data=race_pace.merge(agg_weather_data, on=['RACEYEAR', 'RACENUMBER'],
 
 # ---------------------------------------------------------------------------------------------------------------- Avg sector 1/2/3 speed
 
-full_lap_data=pd.read_csv("RACE_DATA/R_lap_data.csv")
+full_lap_data = pd.read_csv("RAW_DATA/RACE_DATA/R_lap_data.csv")
 
+# Convert sector times to milliseconds
 full_lap_data["Sector1Time"] = pd.to_timedelta(full_lap_data["Sector1Time"], errors='coerce')
 full_lap_data["Sector1Time"] = full_lap_data["Sector1Time"].dt.total_seconds() * 1000
 
@@ -88,15 +94,22 @@ full_lap_data["Sector2Time"] = full_lap_data["Sector2Time"].dt.total_seconds() *
 full_lap_data["Sector3Time"] = pd.to_timedelta(full_lap_data["Sector3Time"], errors='coerce')
 full_lap_data["Sector3Time"] = full_lap_data["Sector3Time"].dt.total_seconds() * 1000
 
+# Calculate average and fastest sector times
 avg_sector_times = (
     full_lap_data
     .groupby(['RACEYEAR', 'RACENUMBER', 'Driver'], as_index=False)
     .agg(
-        AvgSector1Time_ms=('Sector1Time', 'mean'),
-        AvgSector2Time_ms=('Sector2Time', 'mean'),
-        AvgSector3Time_ms=('Sector3Time', 'mean')
+        RACE_AvgSector1Time_ms=('Sector1Time', 'mean'),
+        RACE_FastestSector1Time_ms=('Sector1Time', 'min'),
+        RACE_AvgSector2Time_ms=('Sector2Time', 'mean'),
+        RACE_FastestSector2Time_ms=('Sector2Time', 'min'),
+        RACE_AvgSector3Time_ms=('Sector3Time', 'mean'),
+        RACE_FastestSector3Time_ms=('Sector3Time', 'min')
     )
-) 
+)
+
+# Merge sector times with driver granularity
+final_race_data = final_race_data.merge(avg_sector_times, left_on=['RACEYEAR', 'RACENUMBER', 'Abbreviation'],right_on=['RACEYEAR', 'RACENUMBER', 'Driver'], how="left")
 
 # ---------------------------------------------------------------------------------------------------------------- Avg pit time per race and number of pitstops
 
@@ -108,7 +121,6 @@ full_lap_data["PitInTime"] = full_lap_data["PitInTime"].dt.total_seconds() * 100
 
 full_lap_data["LapTime"] = pd.to_timedelta(full_lap_data["LapTime"], errors='coerce')
 full_lap_data["LapTime"] = full_lap_data["LapTime"].dt.total_seconds() * 1000
-
 
 full_lap_data = full_lap_data.sort_values(['RACEYEAR', 'RACENUMBER', 'Driver', 'Stint', 'LapNumber'])
 
@@ -143,28 +155,28 @@ pit_summary = (
     pit_times_aligned
     .groupby(['RACEYEAR', 'RACENUMBER', 'Driver'], as_index=False)
     .agg(
-        AvgPitStopDuration_ms=('PitDuration_ms', 'mean'),
-        TotalPitStops=('PitDuration_ms', 'count')
+        RACE_AvgPitStopDuration_ms=('PitDuration_ms', 'mean'),
+        RACE_TotalPitStops=('PitDuration_ms', 'count')
     )
 )
 
-final_race_data=final_race_data.merge(pit_summary, left_on=['RACEYEAR', 'RACENUMBER', 'Abbreviation'], right_on=['RACEYEAR', 'RACENUMBER', 'Driver'], how="left" )
-
-
-# if driver does not pit at all (DNS, DNF) then there will be no values for pit, so row mismatch with sector data
-
+# Merge pit summary with driver granularity
+final_race_data = final_race_data.merge(pit_summary, on=['RACEYEAR', 'RACENUMBER', 'Driver'], how="left")
 
 # ---------------------------------------------------------------------------------------------------------------- Avg tyre life SML / Avg speed on SML tyres
 
+# Step 1: Group and aggregate tyre data by Race-Year, Race-Number, Driver, and Compound
 tyre_stats = (
     full_lap_data
     .dropna(subset=['Compound', 'Stint', 'TyreLife', 'SpeedFL', 'LapTime'])
     .groupby(['RACEYEAR', 'RACENUMBER', 'Driver', 'Compound'], as_index=False)
     .agg(
-        MaxStint=('Stint', 'max'),
-        AvgTyreLife=('TyreLife', 'mean'),
-        AvgSpeedOnTyre=('SpeedFL', 'mean'),
-        AvgLapTimeOnTyre=('LapTime', 'mean')
+        RACE_MaxStint=('Stint', 'max'),
+        RACE_AvgTyreLife=('TyreLife', 'mean'),
+        RACE_AvgSpeedOnTyre=('SpeedFL', 'mean'),
+        RACE_FastestSpeedOnTyre=('SpeedFL', 'max'),
+        RACE_AvgLapTimeOnTyre=('LapTime', 'mean'),
+        RACE_FastestLapTimeOnTyre=('LapTime', 'min')
     )
 )
 
@@ -172,35 +184,41 @@ tyre_stats = (
 tyre_stats_pivot = tyre_stats.pivot(index=['RACEYEAR', 'RACENUMBER', 'Driver'], columns='Compound')
 
 # Step 3: Flatten MultiIndex columns with clear naming
-tyre_stats_pivot.columns = [f"RACE_{stat}_{compound}" for stat, compound in tyre_stats_pivot.columns]
+# Note: stat already includes RACE_ prefix from the aggregation
+tyre_stats_pivot.columns = [f"{stat}_{compound}" for stat, compound in tyre_stats_pivot.columns]
 
-# (Optional) Reset index if you want a flat DataFrame
+# Reset index to get back the race and driver columns
 tyre_stats_pivot = tyre_stats_pivot.reset_index()
 
-
-final_race_data=final_race_data.merge(tyre_stats_pivot, left_on=['RACEYEAR', 'RACENUMBER', 'Abbreviation'], right_on=['RACEYEAR', 'RACENUMBER', 'Driver'], how="left" )
-
+# Merge tyre stats with driver granularity
+final_race_data = final_race_data.merge(
+    tyre_stats_pivot,
+    on=['RACEYEAR', 'RACENUMBER', 'Driver'],
+    how="left"
+)
 
 ##################################################################################################################
 # TRACK STATUS DATA
 ##################################################################################################################
 
-track_status_data=pd.read_csv("RACE_DATA/R_track_status.csv")
+track_status_data = pd.read_csv("RAW_DATA/RACE_DATA/R_track_status.csv")
 
 agg_track_status = (
     track_status_data.groupby(["RACEYEAR", "RACENUMBER", "Message"])
-      .size()
-      .unstack(fill_value=0)
-      .reset_index()
+    .size()
+    .unstack(fill_value=0)
+    .reset_index()
 )
 
-agg_track_status=agg_track_status[["RACEYEAR","RACENUMBER","Red","SCDeployed","VSCDeployed","Yellow"]]
-agg_track_status.columns=["RACEYEAR","RACENUMBER","RACE_Red","RACE_SCDeployed","RACE_VSCDeployed","RACE_Yellow"]
-final_race_data=final_race_data.merge(agg_track_status, on=['RACEYEAR', 'RACENUMBER'], how="left")
+agg_track_status = agg_track_status[["RACEYEAR", "RACENUMBER", "Red", "SCDeployed", "VSCDeployed", "Yellow"]]
+agg_track_status.columns = ["RACEYEAR", "RACENUMBER", "RACE_Red", "RACE_SCDeployed", "RACE_VSCDeployed", "RACE_Yellow"]
+
+# Merge track status (race-level, not driver-level)
+final_race_data = final_race_data.merge(agg_track_status, on=['RACEYEAR', 'RACENUMBER'], how="left")
 
 # ---------------------------------------------------------------------------------------------------------------- Track Information here
 
-full_track_corners=pd.read_csv("RACE_DATA/R_track_structure.csv")
+full_track_corners=pd.read_csv("RAW_DATA/RACE_DATA/R_track_structure.csv")
 full_track_corners['CornerCategory'] = full_track_corners['Angle'].abs().apply(lambda x: 'slow' if x > 90 else 'medium' if x > 60 else 'fast')
 
 agg_track_corners = full_track_corners.pivot_table(
@@ -213,14 +231,15 @@ agg_track_corners = full_track_corners.pivot_table(
 
 agg_track_corners['TotalCorners'] = agg_track_corners[['slow', 'medium', 'fast']].sum(axis=1)
 
-final_race_data=final_race_data.merge(agg_track_corners, on=['RACEYEAR', 'RACENUMBER'], how="left")
+# Merge track corners (race-level, not driver-level)
+final_race_data = final_race_data.merge(agg_track_corners, on=['RACEYEAR', 'RACENUMBER'], how="left")
 
 
 ##################################################################################################################
 # SESSION SCHEDULE INFORMATION
 ##################################################################################################################
 
-schedule_data=pd.read_csv("All_session_event_data.csv")
+schedule_data=pd.read_csv("RAW_DATA/All_session_event_data.csv")
 
 def safe_parse(x):
     try:
@@ -258,34 +277,36 @@ for i in range(1, 6):
 schedule_data=schedule_data[['Country', 'Location', 'OfficialEventName',
        'EventName', 'EventFormat','Session1TimeOfDay','Session2TimeOfDay','Session3TimeOfDay','Session4TimeOfDay','Session5TimeOfDay' ,'RACEYEAR', 'RACENUMBER']]
 
-final_race_data=final_race_data.merge(schedule_data, on=['RACEYEAR', 'RACENUMBER'], how='left')
+# Merge schedule data (race-level, not driver-level)
+final_race_data = final_race_data.merge(schedule_data, on=['RACEYEAR', 'RACENUMBER'], how='left')
 
 ##################################################################################################################
 # Correlation Matrix
 ##################################################################################################################
 
-correlation_matrix = final_race_data.corr(numeric_only=True)
-plt.figure(figsize=(30, 30))
-sns.heatmap(correlation_matrix, annot=True, cmap='coolwarm', fmt='.2f')
-plt.title('Correlation Matrix')
-plt.show()
+# correlation_matrix = final_race_data.corr(numeric_only=True)
+# plt.figure(figsize=(30, 30))
+# sns.heatmap(correlation_matrix, annot=True, cmap='coolwarm', fmt='.2f')
+# plt.title('Correlation Matrix')
+# plt.show()
 
 
-target_var = 'Position'
-# Compute correlation matrix
+# target_var = 'Position'
+# # Compute correlation matrix
 
-correlation_matrix = final_race_data.corr(numeric_only=True)
-# Extract only the row/column for the target variable (excluding self-correlation)
+# correlation_matrix = final_race_data.corr(numeric_only=True)
+# # Extract only the row/column for the target variable (excluding self-correlation)
 
-target_corr = correlation_matrix[target_var].drop(labels=[target_var])
+# target_corr = correlation_matrix[target_var].drop(labels=[target_var])
 
-# Plot as a horizontal heatmap
-plt.figure(figsize=(35, 2))
-sns.heatmap(target_corr.to_frame().T, annot=True, cmap='coolwarm', fmt='.2f')
-plt.title(f'Correlation of {target_var} vs All Other Variables')
-plt.yticks(rotation=0)
-plt.tight_layout()
-plt.show()
+# # Plot as a horizontal heatmap
+# plt.figure(figsize=(35, 2))
+# sns.heatmap(target_corr.to_frame().T, annot=True, cmap='coolwarm', fmt='.2f')
+# plt.title(f'Correlation of {target_var} vs All Other Variables')
+# plt.yticks(rotation=0)
+# plt.tight_layout()
+# plt.show()
 
 
-final_race_data.to_csv("final_race_data.csv")
+final_race_data.to_csv("PROCESSED_DATA/final_race_data.csv", index=False)
+print("✅ Race data aggregation complete. Saved to PROCESSED_DATA/final_race_data.csv")
