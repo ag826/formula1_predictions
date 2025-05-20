@@ -5,6 +5,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
 import seaborn as sns
+from sklearn.preprocessing import MinMaxScaler
 
 ##################################################################################################################
 # DRIVER POINTS OVER TIME
@@ -292,4 +293,142 @@ sns.heatmap(correlation_matrix, annot=True, cmap='coolwarm', fmt='.2f')
 plt.title('Correlation Between Selected Weather Features and Tyre Performance')
 plt.tight_layout()
 plt.savefig('ANALYTICS/WEATHER_AND_TYRE_COMPOUND_CORRELATION.png')
+plt.show()
+
+##################################################################################################################
+# RACE INCIDENTS PER TRACK
+##################################################################################################################
+
+# Step 1: Group by Location and calculate averages
+avg_flags_by_location = df.groupby('Location')[["RACE_Red", "RACE_SCDeployed", "RACE_VSCDeployed", "RACE_Yellow"]].mean()
+
+# Step 2: Count number of races per location
+race_counts = (df['Location'].value_counts().rename('RaceCount'))/20
+
+# Step 3: Merge average flags with race counts
+avg_flags_by_location = avg_flags_by_location.merge(race_counts, left_index=True, right_index=True)
+
+# Step 4: Create a 'Total' column for sorting
+avg_flags_by_location['Total'] = avg_flags_by_location[["RACE_Red", "RACE_SCDeployed", "RACE_VSCDeployed", "RACE_Yellow"]].sum(axis=1)
+
+# Step 5: Sort by total incidents
+avg_flags_by_location = avg_flags_by_location.sort_values('Total', ascending=False)
+
+# Step 6: Plotting
+fig, ax = plt.subplots(figsize=(15, 10))
+
+# Stacked bar components
+ax.bar(avg_flags_by_location.index, avg_flags_by_location['RACE_Red'], label='Red Flags', color='tab:red')
+ax.bar(avg_flags_by_location.index, avg_flags_by_location['RACE_Yellow'],
+       bottom=avg_flags_by_location['RACE_Red'], label='Yellow Flags', color='gold')
+ax.bar(avg_flags_by_location.index, avg_flags_by_location['RACE_SCDeployed'],
+       bottom=avg_flags_by_location['RACE_Red'] + avg_flags_by_location['RACE_Yellow'],
+       label='Safety Car', color='gray')
+ax.bar(avg_flags_by_location.index, avg_flags_by_location['RACE_VSCDeployed'],
+       bottom=avg_flags_by_location['RACE_Red'] + avg_flags_by_location['RACE_Yellow'] + avg_flags_by_location['RACE_SCDeployed'],
+       label='Virtual Safety Car', color='tab:blue')
+
+# Step 7: Add total race count as annotation
+for i, (loc, row) in enumerate(avg_flags_by_location.iterrows()):
+    ax.text(i, row['Total'] + 0.1, f"{int(row['RaceCount'])} races", ha='center', va='bottom', fontsize=9, rotation=90)
+
+# Final touches
+ax.set_title('Average Incidents per Race by Location (with Race Counts)', fontsize=16)
+ax.set_ylabel('Average Incident Count per Race')
+ax.set_xticks(range(len(avg_flags_by_location)))
+ax.set_xticklabels(avg_flags_by_location.index, rotation=45, ha='right')
+ax.legend(title='Incident Type')
+max_y = avg_flags_by_location['Total'].max()
+ax.set_ylim(0, max_y + 1)
+
+plt.tight_layout()
+plt.savefig('ANALYTICS/RACE_INCIDENTS_PER_TRACK.png')
+plt.show()
+
+##################################################################################################################
+# TRACK STRUCTURE
+##################################################################################################################
+
+# Get distinct track corner data
+track_structure = df[["Location", "fast", "medium", "slow"]].drop_duplicates()
+track_structure = track_structure.sort_values(by='Location').reset_index(drop=True)
+
+fig, ax = plt.subplots(figsize=(15, 10))
+
+# Stacked bar chart
+ax.bar(range(len(track_structure)), track_structure['fast'], label='Fast Corners (* < 60)', color='#88CCEE')     # Muted Blue
+ax.bar(range(len(track_structure)), track_structure['medium'],
+       bottom=track_structure['fast'], label='Medium Corners (60 < * < 90)', color='#DDCC77')  # Muted Orange
+ax.bar(range(len(track_structure)), track_structure['slow'],
+       bottom=track_structure['fast'] + track_structure['medium'],
+       label='Slow Corners (* > 90)', color='#CC6677')   # Muted Red
+
+# Labels and final formatting
+ax.set_title('Corner Type Distribution per Track', fontsize=16)
+ax.set_ylabel('Number of Corners')
+ax.set_xticks(range(len(track_structure)))
+ax.set_xticklabels(track_structure['Location'], rotation=45, ha='right')
+ax.legend(title='Corner Type')
+ax.set_ylim(0, (track_structure[['fast', 'medium', 'slow']].sum(axis=1).max()) + 2)
+
+plt.tight_layout()
+plt.savefig('ANALYTICS/TRACK_STRUCTURE.png')
+plt.show()
+
+##################################################################################################################
+# DRIVER CORRELATION WITH TRACK STRUCTURE
+##################################################################################################################
+
+# Step 1: One-hot encode 'Location' column
+
+location_dummies = pd.get_dummies(df['Location'], prefix='Loc')
+
+# Step 2: Normalize numeric features 'slow', 'medium', 'fast'
+numeric_features = df[['slow', 'medium', 'fast']]
+scaler = MinMaxScaler()
+numeric_scaled = pd.DataFrame(scaler.fit_transform(numeric_features), columns=numeric_features.columns, index=df.index)
+
+# Step 3: Combine normalized numeric features and location dummies with BroadcastName
+features = pd.concat([df[['DriverId']], numeric_scaled, location_dummies], axis=1)
+
+# Step 4: Group by 'BroadcastName' and compute mean
+driver_features = features.groupby('DriverId').mean().T  # transpose for heatmap layout
+
+# Step 5: Plot heatmap with values shown
+plt.figure(figsize=(20, len(driver_features) * 0.5))
+sns.heatmap(driver_features, cmap='coolwarm', linewidths=0.5,
+            cbar_kws={'label': 'Average Value'}, annot=True, fmt='.2f')
+plt.title('Drivers vs Track Features and Locations')
+plt.ylabel('Track Features and Locations')
+plt.xlabel('Drivers')
+plt.tight_layout()
+plt.savefig('ANALYTICS/DRIVER_CORRELATION_WITH_TRACK_STRUCTURE.png')
+plt.show()
+
+##################################################################################################################
+# TEAM CORRELATION WITH TRACK STRUCTURE
+##################################################################################################################
+
+location_dummies = pd.get_dummies(df['Location'], prefix='Loc')
+
+# Step 2: Normalize numeric features 'slow', 'medium', 'fast'
+numeric_features = df[['slow', 'medium', 'fast']]
+scaler = MinMaxScaler()
+numeric_scaled = pd.DataFrame(scaler.fit_transform(numeric_features), columns=numeric_features.columns, index=df.index)
+
+# Step 3: Combine normalized numeric features and location dummies with BroadcastName
+features = pd.concat([df[['TeamName']], numeric_scaled, location_dummies], axis=1)
+
+# Step 4: Group by 'BroadcastName' and compute mean
+driver_features = features.groupby('TeamName').mean().T  # transpose for heatmap layout
+
+# Step 5: Plot heatmap with values shown
+plt.figure(figsize=(10, len(driver_features) * 0.5))
+sns.heatmap(driver_features, cmap='coolwarm', linewidths=0.5,
+            cbar_kws={'label': 'Average Value'}, annot=True, fmt='.2f')
+plt.title('Teams vs Track Features and Locations')
+plt.ylabel('Track Features and Locations')
+plt.xlabel('Teams')
+plt.tight_layout()
+plt.savefig('ANALYTICS/TEAM_CORRELATION_WITH_TRACK_STRUCTURE.png')
 plt.show()
