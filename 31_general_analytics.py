@@ -4,6 +4,7 @@
 import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
+import seaborn as sns
 
 ##################################################################################################################
 # DRIVER POINTS OVER TIME
@@ -152,44 +153,35 @@ plt.show()
 ##################################################################################################################
 
 tyre_compounds = ['HARD', 'MEDIUM', 'SOFT', 'INTERMEDIATE', 'WET']
-speed_cols = [f'RACE_AvgSpeedOnTyre_{comp}' for comp in tyre_compounds]
+speed_cols = [f'RACE_FastestSpeedOnTyre_{comp}' for comp in tyre_compounds]
 
-# Fill NaNs with 0 if needed
-df[speed_cols] = df[speed_cols].fillna(0)
+# Replace 0s with NaN so they're excluded from mean calculation
+df[speed_cols] = df[speed_cols].replace(0, np.nan)
 
-# Create a Race ID (e.g. "2023-5")
-df['RaceID'] = df['RACEYEAR'].astype(str) + '-' + df['RACENUMBER'].astype(str)
-
-# Group by race and take mean of the speeds for each tyre compound
-grouped = df.groupby('RaceID')[speed_cols].mean().reset_index()
+# Group by race and calculate mean only for non-NaN (non-zero) values
+grouped = df.groupby('Location')[speed_cols].mean().reset_index()
 
 # Melt to long format for plotting
-melted = grouped.melt(id_vars=['RaceID'], 
+melted = grouped.melt(id_vars=['Location'], 
                       value_vars=speed_cols,
                       var_name='TyreCompound',
-                      value_name='AvgTopSpeed')
+                      value_name='FastestTopSpeed')
 
 # Clean TyreCompound column
-melted['TyreCompound'] = melted['TyreCompound'].str.replace('RACE_AvgSpeedOnTyre_', '')
+melted['TyreCompound'] = melted['TyreCompound'].str.replace('RACE_FastestSpeedOnTyre_', '')
 
-# Plotting
-# plt.figure(figsize=(15, 6))
+# Remove rows where FastestTopSpeed is NaN (no valid data for that compound in that race)
+melted = melted.dropna(subset=['FastestTopSpeed'])
 
-# sns.scatterplot(data=melted, x='RaceID', y='AvgTopSpeed', hue='TyreCompound', s=100)
+# Sort by speed range (largest difference between fastest and slowest compound per location)
+race_ranges = melted.groupby('Location')['FastestTopSpeed'].agg(lambda x: x.max() - x.min()).sort_values(ascending=False)
+races = race_ranges.index.tolist()
 
-# plt.xticks(rotation=90)
-# plt.xlabel('Race (Year-RaceNumber)')
-# plt.ylabel('Average Top Speed')
-# plt.title('Average Top Speed by Tyre Compound for Each Race')
-# plt.legend(title='Tyre Compound')
-# plt.tight_layout()
-# plt.show()
+# Reorder melted data according to the sorted races
+melted['Location'] = pd.Categorical(melted['Location'], categories=races, ordered=True)
+melted = melted.sort_values('Location')
 
-
-melted = melted.sort_values(['RaceID'])
-
-# Get unique races and y positions
-races = melted['RaceID'].unique()
+# Get y positions for the sorted races
 y = np.arange(len(races))
 
 # Prepare color and marker maps for tyre compounds
@@ -211,26 +203,34 @@ marker_map = {
 
 fig, ax = plt.subplots(figsize=(14, 10))
 
+labeled_compounds = set()
+
 # Plot dots for each tyre compound at y-position corresponding to the race
 for i, race in enumerate(races):
-    race_data = melted[melted['RaceID'] == race]
+    race_data = melted[melted['Location'] == race]
     for _, row in race_data.iterrows():
-        ax.scatter(row['AvgTopSpeed'], i, 
-                   color=color_map.get(row['TyreCompound'], 'black'), 
-                   marker=marker_map.get(row['TyreCompound'], 'o'), 
+        compound = row['TyreCompound']
+        # Only add label if this compound hasn't been labeled yet
+        label = compound if compound not in labeled_compounds else ""
+        if compound not in labeled_compounds:
+            labeled_compounds.add(compound)
+            
+        ax.scatter(row['FastestTopSpeed'], i, 
+                   color=color_map.get(compound, 'black'), 
+                   marker=marker_map.get(compound, 'o'), 
                    s=100, 
-                   label=row['TyreCompound'] if i == 0 else "")  # label only once for legend
+                   label=label)
 
     # Optional: draw lines connecting dots for this race
-    speeds = race_data['AvgTopSpeed'].values
+    speeds = race_data['FastestTopSpeed'].values
     ax.plot(speeds, [i]*len(speeds), color='gray', linestyle='--', alpha=0.5)
 
 # Set y-ticks to race names
 ax.set_yticks(y)
 ax.set_yticklabels(races)
 
-ax.set_xlabel('Average Top Speed')
-ax.set_title('Average Top Speed per Tyre Compound Across Races Ordered by Year and Number')
+ax.set_xlabel('Fastest Top Speed')
+ax.set_title('Fastest Top Speed per Tyre Compound Across Locations (Sorted by Speed Range)')
 
 # Handle legend without duplicates
 handles, labels = ax.get_legend_handles_labels()
@@ -238,4 +238,58 @@ by_label = dict(zip(labels, handles))
 ax.legend(by_label.values(), by_label.keys(), title='Tyre Compound')
 
 plt.tight_layout()
+plt.savefig('ANALYTICS/FASTEST_TOP_SPEED_PER_TYRE_COMPOUND_ACROSS_LOCATIONS.png', dpi=300, bbox_inches='tight')
+plt.show()
+
+# Optional: Print the speed ranges for analysis
+print("\nSpeed Ranges by Location (largest to smallest):")
+print("=" * 50)
+for location in races:
+    location_data = melted[melted['Location'] == location]
+    speed_range = location_data['FastestTopSpeed'].max() - location_data['FastestTopSpeed'].min()
+    min_speed = location_data['FastestTopSpeed'].min()
+    max_speed = location_data['FastestTopSpeed'].max()
+    print(f"{location:<20} | Range: {speed_range:6.1f} km/h | Min: {min_speed:6.1f} | Max: {max_speed:6.1f}")
+
+
+##################################################################################################################
+# Weather and tyre compound correlation
+##################################################################################################################
+
+x_cols = [
+    "RACE_AirTemp_mean", "RACE_AirTemp_min", "RACE_AirTemp_max",
+    "RACE_Humidity_mean", "RACE_Humidity_min", "RACE_Humidity_max",
+    "RACE_Pressure_mean", "RACE_Pressure_min", "RACE_Pressure_max",
+    "RACE_TrackTemp_mean", "RACE_TrackTemp_min", "RACE_TrackTemp_max",
+    "RACE_WindDirection_mean", "RACE_WindSpeed_mean", "RACE_WindSpeed_max"
+]
+
+y_cols = [
+    "RACE_TotalPitStops","RACE_MaxStint_SOFT", "RACE_AvgTyreLife_SOFT", "RACE_AvgSpeedOnTyre_SOFT",
+    "RACE_FastestSpeedOnTyre_SOFT", "RACE_AvgLapTimeOnTyre_SOFT", "RACE_FastestLapTimeOnTyre_SOFT",
+    
+    "RACE_MaxStint_MEDIUM", "RACE_AvgTyreLife_MEDIUM", "RACE_AvgSpeedOnTyre_MEDIUM",
+    "RACE_FastestSpeedOnTyre_MEDIUM", "RACE_AvgLapTimeOnTyre_MEDIUM", "RACE_FastestLapTimeOnTyre_MEDIUM",
+    
+    "RACE_MaxStint_HARD", "RACE_AvgTyreLife_HARD", "RACE_AvgSpeedOnTyre_HARD",
+    "RACE_FastestSpeedOnTyre_HARD", "RACE_AvgLapTimeOnTyre_HARD", "RACE_FastestLapTimeOnTyre_HARD",
+    
+    # "RACE_MaxStint_INTERMEDIATE", "RACE_AvgTyreLife_INTERMEDIATE", "RACE_AvgSpeedOnTyre_INTERMEDIATE",
+    # "RACE_FastestSpeedOnTyre_INTERMEDIATE", "RACE_AvgLapTimeOnTyre_INTERMEDIATE", "RACE_FastestLapTimeOnTyre_INTERMEDIATE",
+    
+    # "RACE_MaxStint_WET", "RACE_AvgTyreLife_WET", "RACE_AvgSpeedOnTyre_WET",
+    # "RACE_FastestSpeedOnTyre_WET", "RACE_AvgLapTimeOnTyre_WET", "RACE_FastestLapTimeOnTyre_WET"
+]
+
+correlation_matrix = pd.DataFrame(index=x_cols, columns=y_cols)
+for x in x_cols:
+    for y in y_cols:
+        correlation_matrix.loc[x, y] = df[[x, y]].corr().iloc[0, 1]
+correlation_matrix = correlation_matrix.astype(float)
+
+plt.figure(figsize=(len(y_cols) * 0.7, len(x_cols) * 0.7))
+sns.heatmap(correlation_matrix, annot=True, cmap='coolwarm', fmt='.2f')
+plt.title('Correlation Between Selected Weather Features and Tyre Performance')
+plt.tight_layout()
+plt.savefig('ANALYTICS/WEATHER_AND_TYRE_COMPOUND_CORRELATION.png')
 plt.show()
