@@ -1,0 +1,576 @@
+feature,importance
+Status_Retired,0.08185381
+FP2_FastestLapTimeOnTyre_INTERMEDIATE,0.015628397
+TeamId_aston_martin,0.015036585
+Racepace,0.010244065
+RACE_Pressure_max,0.0101046385
+TeamName_Mercedes,0.009459992
+TeamName_Haas F1 Team,0.009260744
+TeamName_Kick Sauber,0.00869357
+Status_Lapped,0.008227029
+GridPosition,0.0077621904
+Status_Finished,0.0075973812
+FP2_TrackTemp_min,0.006807155
+RACE_AvgSpeedOnTyre_WET,0.006785911
+RACE_AvgLapTimeOnTyre_WET,0.0064404365
+FP2_AvgSpeedOnTyre_INTERMEDIATE,0.0064242077
+CountryCode_FRA,0.006307669
+RACE_MaxStint_INTERMEDIATE,0.0062396056
+Quali_WindSpeed_mean,0.006180263
+FP3_WindSpeed_mean,0.00610375
+FP1_Yellow,0.006039077
+Quali_Pressure_mean,0.0060262815
+FP3_Humidity_max,0.0059674387
+FP3_AvgSpeedOnTyre_INTERMEDIATE,0.005844332
+FP3_AvgLapTimeOnTyre_WET,0.005837384
+RACE_AvgLapTimeOnTyre_INTERMEDIATE,0.0057568788
+Quali_AvgTyreLife_INTERMEDIATE,0.0057323384
+CountryCode_NED,0.005628109
+FP1_AirTemp_min,0.005501201
+RACE_AvgLapTimeOnTyre_MEDIUM,0.00547966
+BroadcastName_A ALBON,0.0054754033
+FP3_FastestLapTimeOnTyre_INTERMEDIATE,0.005295677
+FP3_Humidity_min,0.005196763
+Quali_MaxStint_SOFT,0.0051714946
+FP3_Red,0.0050917114
+FP1_Humidity_max,0.0050685974
+EventFormat_conventional,0.0050466834
+FP3_MaxStint_SOFT,0.0050319238
+RACE_TotalPitStops,0.0050139176
+Quali_AirTemp_mean,0.004999972
+FP2_FastestLapTimeOnTyre_HARD,0.004989581
+FP2_AvgSector3Time_ms,0.004802877
+Session5TimeOfDay_afternoon,0.0047857026
+TeamName_Ferrari,0.00465334
+ComparativePace_Quali_Q2_ms,0.004602904
+FP3_TrackTemp_min,0.004508966
+ComparativePace_FP3_FastestFullLapTime_ms,0.004487293
+FP3_WindSpeed_max,0.0044809557
+FP1_Humidity_min,0.0044301227
+RACE_AvgSpeedOnTyre_SOFT,0.0043988856
+RACE_TrackTemp_max,0.004370062
+FP2_Humidity_min,0.0043544034
+Quali_TrackTemp_mean,0.004326674
+FP1_AirTemp_max,0.0042894688
+RACE_Humidity_mean,0.0042635114
+FP3_AvgSpeedOnTyre_HARD,0.0041356054
+ComparativePace_FP2_FastestSector2Time_ms,0.0041197785
+RACE_FastestSpeedOnTyre_SOFT,0.004089631
+FP2_WindSpeed_max,0.004065752
+FP3_AirTemp_max,0.0040412196
+ComparativePace_Quali_Q1_ms,0.0040029725
+ComparativePace_FP1_FastestFullLapTime_ms,0.00400196
+FP3_FastestSpeedOnTyre_SOFT,0.00398206
+ComparativePace_FP3_FastestSector2Time_ms,0.003978557
+FP2_AvgLapTimeOnTyre_MEDIUM,0.0039628646
+RACE_FastestSpeedOnTyre_WET,0.003906723
+FP3_AvgSector1Time_ms,0.0038992572
+Quali_Humidity_mean,0.00387405
+FP1_Humidity_mean,0.0038559134
+FP2_FastestSpeedOnTyre_MEDIUM,0.0038359382
+Quali_TotalPitStops,0.0038270492
+RACE_FastestSector1Time_ms,0.00378317
+FP1_AvgLapTimeOnTyre_SOFT,0.0037369248
+FP1_AvgSector3Time_ms,0.0037368007
+RACE_Humidity_max,0.0037203366
+ComparativePace_Quali_FastestSector3Time_ms,0.0037141023
+FP2_AvgTyreLife_SOFT,0.003713705
+ComparativePace_FP2_FastestSector3Time_ms,0.0037080217
+ComparativePace_FP1_FastestSector2Time_ms,0.0037020824
+RACE_AvgTyreLife_MEDIUM,0.0036825333
+ComparativePace_FP1_FastestSector3Time_ms,0.003666668
+Quali_Humidity_max,0.0036641227
+FP2_AvgSector1Time_ms,0.0036605836
+CountryCode_ESP,0.0036538788
+DriverNumber,0.0036254053
+RACE_AvgSector3Time_ms,0.003615066
+FP1_AvgTyreLife_SOFT,0.0036019692
+ComparativePace_Quali_FastestSector2Time_ms,0.0035814876
+RACE_AvgSector1Time_ms,0.0035796277
+FP3_Pressure_mean,0.0035535644
+FP3_FastestSpeedOnTyre_MEDIUM,0.0035534361
+RACE_SCDeployed,0.0035521197
+FP2_AvgTyreLife_MEDIUM,0.0035441942
+Quali_WindSpeed_max,0.0035385105
+FP1_FastestLapTimeOnTyre_HARD,0.003531338
+RACE_AvgTyreLife_INTERMEDIATE,0.0035287493
+RACE_AvgSpeedOnTyre_INTERMEDIATE,0.0035273184
+ComparativePace_Quali_FastestSector1Time_ms,0.0035111778
+FP1_FastestSpeedOnTyre_MEDIUM,0.0034717727
+ComparativePace_FP2_FastestFullLapTime_ms,0.0034714446
+FP1_AvgSpeedOnTyre_SOFT,0.003470499
+FP3_AvgLapTimeOnTyre_INTERMEDIATE,0.0034701817
+RACE_AirTemp_min,0.0034340627
+FP2_WindSpeed_mean,0.0034299695
+ComparativePace_Quali_Q3_ms,0.003424039
+RACE_MaxStint_HARD,0.0034218451
+RACE_Yellow,0.00339576
+Quali_Yellow,0.0033915783
+FP1_MaxStint_MEDIUM,0.0033907657
+FP2_AvgSpeedOnTyre_SOFT,0.0033889613
+FP1_AvgSector1Time_ms,0.0033851329
+ComparativePace_FP1_FastestSector1Time_ms,0.003380441
+Quali_AvgPitStopDuration_ms,0.0033792204
+Quali_WindDirection_mean,0.0033610854
+ComparativePace_FP2_FastestSector1Time_ms,0.0033544144
+RACE_AvgTyreLife_WET,0.0033521657
+FP2_Pressure_mean,0.0033336747
+FP2_AvgLapTimeOnTyre_HARD,0.0033238977
+FP1_AvgLapTimeOnTyre_HARD,0.003309029
+RACE_WindSpeed_max,0.0033067842
+FP2_AvgPitStopDuration_ms,0.0033046731
+FP3_AvgTyreLife_HARD,0.0032937338
+FP1_AvgLapTimeOnTyre_MEDIUM,0.0032891457
+FP2_TotalPitStops,0.003274079
+FP1_AvgTyreLife_HARD,0.0032589857
+RACE_AvgLapTimeOnTyre_HARD,0.0032468853
+FP2_AirTemp_min,0.0032465088
+FP1_AirTemp_mean,0.0032344933
+RACE_WindSpeed_mean,0.0032343427
+FP3_TrackTemp_max,0.0032291296
+RACE_FastestLapTimeOnTyre_SOFT,0.0032245722
+RACENUMBER,0.0032211987
+Quali_TrackTemp_max,0.0032129053
+FP3_AvgLapTimeOnTyre_SOFT,0.0031957792
+FP2_MaxStint_SOFT,0.003144057
+Quali_FastestSpeedOnTyre_SOFT,0.003134036
+Quali_AvgTyreLife_SOFT,0.0031232098
+RACE_FastestSector3Time_ms,0.003120444
+RACE_AvgTyreLife_HARD,0.0031168007
+RACE_FastestSpeedOnTyre_MEDIUM,0.0031085978
+FP1_AvgPitStopDuration_ms,0.003104699
+RACE_MaxStint_MEDIUM,0.0030940317
+FP3_TrackTemp_mean,0.00308439
+FP1_FastestSpeedOnTyre_HARD,0.0030838677
+FP1_MaxStint_HARD,0.0030766753
+ComparativePace_FP3_FastestSector1Time_ms,0.003073605
+BroadcastName_C SAINZ,0.0030657402
+Quali_AvgLapTimeOnTyre_INTERMEDIATE,0.003051456
+FP3_FastestLapTimeOnTyre_MEDIUM,0.0030432967
+CountryCode_AUS,0.0030179638
+Quali_AvgSpeedOnTyre_SOFT,0.0030082082
+FP1_AvgTyreLife_MEDIUM,0.0030047481
+FP1_AvgSpeedOnTyre_HARD,0.0029999574
+FP3_AvgSector3Time_ms,0.0029798273
+FP3_AvgLapTimeOnTyre_MEDIUM,0.0029757952
+FP3_FastestLapTimeOnTyre_SOFT,0.0029729945
+RACE_AirTemp_mean,0.002952704
+ComparativePace_FP3_FastestSector3Time_ms,0.0029365742
+RACE_AvgTyreLife_SOFT,0.0029335395
+FP3_AvgSpeedOnTyre_MEDIUM,0.0029194306
+FP1_TrackTemp_max,0.0028995534
+FP2_AvgSpeedOnTyre_MEDIUM,0.0028906025
+FP3_AvgTyreLife_MEDIUM,0.002868131
+FP2_AvgLapTimeOnTyre_SOFT,0.0028595885
+FP2_AvgSector2Time_ms,0.0028102354
+FP2_TrackTemp_mean,0.0028055075
+FP1_Pressure_mean,0.0027968308
+RACE_WindDirection_mean,0.0027902874
+RACE_FastestSpeedOnTyre_HARD,0.0027877167
+Quali_AvgSector3Time_ms,0.0027826724
+FP1_WindDirection_mean,0.0027734528
+FP3_AvgTyreLife_SOFT,0.002772952
+RACE_FastestSector2Time_ms,0.0027559395
+FP1_FastestLapTimeOnTyre_SOFT,0.002747593
+FP2_WindDirection_mean,0.0027348835
+FP2_FastestLapTimeOnTyre_MEDIUM,0.0027315402
+FP3_MaxStint_MEDIUM,0.002720833
+FP3_AvgPitStopDuration_ms,0.0027064914
+Quali_Pressure_min,0.002687405
+FP1_FastestLapTimeOnTyre_MEDIUM,0.002686012
+Quali_TrackTemp_min,0.0026695076
+Quali_FastestLapTimeOnTyre_SOFT,0.0026678538
+FP1_WindSpeed_max,0.0026643816
+RACE_TrackTemp_mean,0.0026490358
+FP2_FastestSpeedOnTyre_SOFT,0.0026266102
+FP1_AvgSpeedOnTyre_MEDIUM,0.0026164255
+FP1_Red,0.002606604
+FP2_AvgTyreLife_HARD,0.0026039777
+RACE_AvgPitStopDuration_ms,0.0025980817
+FP3_AirTemp_min,0.0025927362
+FP2_MaxStint_MEDIUM,0.0025900565
+FP2_AvgLapTimeOnTyre_INTERMEDIATE,0.0025769104
+FP2_MaxStint_INTERMEDIATE,0.0025715416
+CountryCode_GBR,0.0025698384
+FP2_AvgSpeedOnTyre_HARD,0.0024991382
+FP1_AvgSector2Time_ms,0.0024924055
+FP2_FastestLapTimeOnTyre_SOFT,0.002488022
+FP1_MaxStint_SOFT,0.0024868355
+Quali_AirTemp_max,0.0024753707
+FP3_FastestLapTimeOnTyre_HARD,0.0024715613
+FP3_TotalPitStops,0.0024361494
+FP3_FastestSpeedOnTyre_HARD,0.002435577
+FP1_MaxStint_INTERMEDIATE,0.0023919914
+FP3_AvgSpeedOnTyre_SOFT,0.0023916117
+FP3_Humidity_mean,0.002387234
+FP3_Yellow,0.0023821483
+RACE_AvgSpeedOnTyre_HARD,0.0023654164
+FP3_WindDirection_mean,0.002364463
+FP1_WindSpeed_mean,0.0023543567
+Abbreviation_TSU,0.0023520733
+FP3_AvgSector2Time_ms,0.0023379289
+FP2_Humidity_mean,0.0023324762
+FP1_Pressure_min,0.0023257898
+BroadcastName_Y TSUNODA,0.002324557
+RACE_Humidity_min,0.0023010056
+Quali_FastestSpeedOnTyre_INTERMEDIATE,0.0022843806
+RACE_TrackTemp_min,0.0022522986
+Quali_AvgSector2Time_ms,0.0022488742
+RACE_FastestLapTimeOnTyre_HARD,0.002235962
+Quali_FastestLapTimeOnTyre_MEDIUM,0.00223432
+FP3_Pressure_min,0.0022289837
+FP2_AirTemp_mean,0.0022096096
+BroadcastName_L SARGEANT,0.0021958984
+FP2_FastestSpeedOnTyre_HARD,0.002177125
+RACE_AvgSpeedOnTyre_MEDIUM,0.0021734287
+FP2_AvgTyreLife_INTERMEDIATE,0.002120698
+RACE_VSCDeployed,0.002120397
+RACE_MaxStint_SOFT,0.00207568
+FP1_TrackTemp_min,0.0020644169
+RACE_AvgLapTimeOnTyre_SOFT,0.0020522974
+FP1_FastestSpeedOnTyre_SOFT,0.0019947884
+Quali_AvgSector1Time_ms,0.001981822
+fast,0.0019783236
+Quali_AvgLapTimeOnTyre_SOFT,0.0019635241
+RACE_AirTemp_max,0.0019600347
+RACE_FastestSpeedOnTyre_INTERMEDIATE,0.0019379184
+medium,0.0019279919
+RACE_Red,0.0018479448
+RACE_Pressure_mean,0.0018287116
+FP3_AvgLapTimeOnTyre_HARD,0.0018261449
+RACE_AvgSector2Time_ms,0.0018141555
+RACE_FastestLapTimeOnTyre_MEDIUM,0.0018139443
+FP1_TrackTemp_mean,0.0017822974
+slow,0.0017573774
+FP1_TotalPitStops,0.0017318743
+TeamName_Alpine,0.0016497287
+Quali_Humidity_min,0.0016269301
+Quali_AvgSpeedOnTyre_HARD,0.0016185101
+RACE_FastestLapTimeOnTyre_INTERMEDIATE,0.0015962014
+FP3_AirTemp_mean,0.0015930756
+Quali_AvgSpeedOnTyre_MEDIUM,0.0014656755
+FP1_MaxStint_WET,0.0013968938
+Session2TimeOfDay_evening,0.0013714306
+FP2_Pressure_min,0.0013148489
+FP2_Pressure_max,0.0012250323
+TotalCorners,0.0011754099
+FP2_Humidity_max,0.0011172297
+Quali_AvgLapTimeOnTyre_MEDIUM,0.0011043891
+FP2_TrackTemp_max,0.0009632276
+FP1_AvgLapTimeOnTyre_WET,0.0009217817
+RACE_MaxStint_WET,0.0009060092
+FP3_MaxStint_HARD,0.0008742484
+RACE_FastestLapTimeOnTyre_WET,0.0008720433
+TeamId_ferrari,0.0008651827
+BroadcastName_N DE VRIES,0.0
+FP3_AvgTyreLife_INTERMEDIATE,0.0
+Quali_AvgLapTimeOnTyre_HARD,0.0
+Quali_FastestSpeedOnTyre_UNKNOWN,0.0
+Quali_FastestSpeedOnTyre_WET,0.0
+FP3_AvgTyreLife_WET,0.0
+Quali_FastestSpeedOnTyre_MEDIUM,0.0
+FP1_AvgTyreLife_INTERMEDIATE,0.0
+Quali_AvgLapTimeOnTyre_UNKNOWN,0.0
+Quali_AvgLapTimeOnTyre_WET,0.0
+FP3_FastestSpeedOnTyre_WET,0.0
+Quali_FastestLapTimeOnTyre_HARD,0.0
+BroadcastName_M VERSTAPPEN,0.0
+FP3_SCDeployed,0.0
+BroadcastName_L NORRIS,0.0
+FP3_VSCDeployed,0.0
+BroadcastName_C LECLERC,0.0
+BroadcastName_L HAMILTON,0.0
+Abbreviation_HUL,0.0
+BroadcastName_D RICCIARDO,0.0
+BroadcastName_E OCON,0.0
+BroadcastName_F ALONSO,0.0
+BroadcastName_F COLAPINTO,0.0
+Quali_Red,0.0
+Quali_FastestSpeedOnTyre_HARD,0.0
+Quali_FastestLapTimeOnTyre_WET,0.0
+Quali_FastestLapTimeOnTyre_UNKNOWN,0.0
+BroadcastName_L STROLL,0.0
+Quali_AirTemp_min,0.0
+FP3_FastestSpeedOnTyre_INTERMEDIATE,0.0
+FP3_AvgSpeedOnTyre_WET,0.0
+Quali_FastestLapTimeOnTyre_INTERMEDIATE,0.0
+BroadcastName_K MAGNUSSEN,0.0
+BroadcastName_J DOOHAN,0.0
+Quali_AvgSpeedOnTyre_WET,0.0
+Abbreviation_COL,0.0
+BroadcastName_G RUSSELL,0.0
+FP2_AirTemp_max,0.0
+BroadcastName_S PEREZ,0.0
+Abbreviation_GAS,0.0
+Quali_MaxStint_MEDIUM,0.0
+FP3_Pressure_max,0.0
+Abbreviation_DOO,0.0
+Quali_Pressure_max,0.0
+Quali_MaxStint_INTERMEDIATE,0.0
+Abbreviation_DEV,0.0
+Quali_MaxStint_HARD,0.0
+BroadcastName_V BOTTAS,0.0
+BroadcastName_G ZHOU,0.0
+FP3_MaxStint_WET,0.0
+Abbreviation_ALB,0.0
+FP2_MaxStint_HARD,0.0
+FP2_Yellow,0.0
+FP2_VSCDeployed,0.0
+FP2_SCDeployed,0.0
+BroadcastName_I HADJAR,0.0
+FP2_Red,0.0
+Abbreviation_BOT,0.0
+Abbreviation_ALO,0.0
+Abbreviation_ANT,0.0
+FP2_FastestSpeedOnTyre_INTERMEDIATE,0.0
+Abbreviation_BOR,0.0
+BroadcastName_L LAWSON,0.0
+Abbreviation_HAD,0.0
+FP1_VSCDeployed,0.0
+FP1_SCDeployed,0.0
+BroadcastName_N HULKENBERG,0.0
+FP3_MaxStint_INTERMEDIATE,0.0
+FP1_AvgTyreLife_WET,0.0
+Quali_AvgSpeedOnTyre_UNKNOWN,0.0
+Abbreviation_BEA,0.0
+FP1_AvgSpeedOnTyre_INTERMEDIATE,0.0
+BroadcastName_O BEARMAN,0.0
+Quali_AvgSpeedOnTyre_INTERMEDIATE,0.0
+Quali_AvgTyreLife_WET,0.0
+FP1_AvgSpeedOnTyre_WET,0.0
+Quali_AvgTyreLife_UNKNOWN,0.0
+Quali_AvgTyreLife_MEDIUM,0.0
+FP1_FastestSpeedOnTyre_INTERMEDIATE,0.0
+BroadcastName_G BORTOLETO,0.0
+FP1_FastestSpeedOnTyre_WET,0.0
+Quali_AvgTyreLife_HARD,0.0
+FP1_AvgLapTimeOnTyre_INTERMEDIATE,0.0
+Quali_MaxStint_WET,0.0
+Abbreviation_HAM,0.0
+Quali_MaxStint_UNKNOWN,0.0
+FP1_FastestLapTimeOnTyre_INTERMEDIATE,0.0
+BroadcastName_O PIASTRI,0.0
+BroadcastName_P GASLY,0.0
+FP1_FastestLapTimeOnTyre_WET,0.0
+BroadcastName_K ANTONELLI,0.0
+FP3_FastestLapTimeOnTyre_WET,0.0
+DriverId_norris,0.0
+FP1_Pressure_max,0.0
+Country_Mexico,0.0
+Location_Baku,0.0
+Location_Austin,0.0
+Country_United States,0.0
+Country_United Kingdom,0.0
+Country_United Arab Emirates,0.0
+Country_Spain,0.0
+Country_Singapore,0.0
+Country_Saudi Arabia,0.0
+Country_Qatar,0.0
+Country_Netherlands,0.0
+Country_Monaco,0.0
+Country_Japan,0.0
+Status_Withdrew,0.0
+Country_Italy,0.0
+Country_Hungary,0.0
+Country_Great Britain,0.0
+Country_China,0.0
+Country_Canada,0.0
+Country_Brazil,0.0
+Country_Belgium,0.0
+Country_Bahrain,0.0
+Country_Azerbaijan,0.0
+Country_Austria,0.0
+Country_Australia,0.0
+Location_Barcelona,0.0
+Location_Budapest,0.0
+Location_Imola,0.0
+Location_Jeddah,0.0
+OfficialEventName_FORMULA 1 AZERBAIJAN GRAND PRIX 2023,0.0
+OfficialEventName_FORMULA 1 AWS GRAND PRIX DU CANADA 2024,0.0
+OfficialEventName_FORMULA 1 AWS GRAN PREMIO DE ESPAÑA 2023,0.0
+OfficialEventName_FORMULA 1 ARAMCO GRAN PREMIO DE ESPAÑA 2024,0.0
+OfficialEventName_FORMULA 1 ARAMCO BRITISH GRAND PRIX 2023,0.0
+Location_Zandvoort,0.0
+Location_Yas Island,0.0
+Location_São Paulo,0.0
+Location_Suzuka,0.0
+Location_Spielberg,0.0
+Location_Spa-Francorchamps,0.0
+Location_Silverstone,0.0
+Location_Shanghai,0.0
+Location_Sakhir,0.0
+Location_Monza,0.0
+Location_Montréal,0.0
+Location_Monaco,0.0
+Location_Miami,0.0
+Location_Mexico City,0.0
+Location_Melbourne,0.0
+Location_Marina Bay,0.0
+Location_Lusail,0.0
+Location_Las Vegas,0.0
+Country_Abu Dhabi,0.0
+DriverId_de_vries,0.0
+OfficialEventName_FORMULA 1 CRYPTO.COM MIAMI GRAND PRIX 2024,0.0
+DriverId_max_verstappen,0.0
+TeamId_alpine,0.0
+TeamId_alphatauri,0.0
+TeamId_alfa,0.0
+TeamName_Williams,0.0
+TeamName_Red Bull Racing,0.0
+TeamName_Racing Bulls,0.0
+TeamName_RB,0.0
+DriverId_kevin_magnussen,0.0
+TeamName_McLaren,0.0
+DriverId_lawson,0.0
+DriverId_leclerc,0.0
+TeamName_Aston Martin,0.0
+DriverId_doohan,0.0
+TeamName_AlphaTauri,0.0
+TeamName_Alfa Romeo,0.0
+DriverId_zhou,0.0
+DriverId_tsunoda,0.0
+DriverId_stroll,0.0
+DriverId_sargeant,0.0
+DriverId_sainz,0.0
+DriverId_russell,0.0
+DriverId_ricciardo,0.0
+DriverId_piastri,0.0
+DriverId_perez,0.0
+DriverId_hulkenberg,0.0
+TeamId_haas,0.0
+TeamId_mclaren,0.0
+TeamId_mercedes,0.0
+DriverId_gasly,0.0
+Status_Disqualified,0.0
+Status_Did not start,0.0
+Status_Collision damage,0.0
+Status_Accident,0.0
+CountryCode_USA,0.0
+CountryCode_THA,0.0
+CountryCode_NZL,0.0
+DriverId_hadjar,0.0
+CountryCode_MON,0.0
+CountryCode_MEX,0.0
+CountryCode_JPN,0.0
+CountryCode_GER,0.0
+DriverId_hamilton,0.0
+CountryCode_FIN,0.0
+CountryCode_DEN,0.0
+CountryCode_CHN,0.0
+CountryCode_CAN,0.0
+CountryCode_ARG,0.0
+TeamId_williams,0.0
+TeamId_sauber,0.0
+TeamId_red_bull,0.0
+TeamId_rb,0.0
+OfficialEventName_FORMULA 1 CRYPTO.COM MIAMI GRAND PRIX 2023,0.0
+OfficialEventName_FORMULA 1 CRYPTO.COM MIAMI GRAND PRIX 2025,0.0
+Abbreviation_LAW,0.0
+DriverId_colapinto,0.0
+Session4TimeOfDay_afternoon,0.0
+Session3TimeOfDay_morning,0.0
+Session3TimeOfDay_evening,0.0
+Session3TimeOfDay_afternoon,0.0
+Session2TimeOfDay_night,0.0
+Session2TimeOfDay_afternoon,0.0
+Session1TimeOfDay_morning,0.0
+Session1TimeOfDay_evening,0.0
+Session1TimeOfDay_afternoon,0.0
+EventFormat_sprint_shootout,0.0
+EventFormat_sprint_qualifying,0.0
+EventName_United States Grand Prix,0.0
+EventName_Emilia Romagna Grand Prix,0.0
+EventName_São Paulo Grand Prix,0.0
+EventName_Spanish Grand Prix,0.0
+EventName_Singapore Grand Prix,0.0
+EventName_Saudi Arabian Grand Prix,0.0
+EventName_Qatar Grand Prix,0.0
+EventName_Monaco Grand Prix,0.0
+EventName_Miami Grand Prix,0.0
+EventName_Mexico City Grand Prix,0.0
+EventName_Las Vegas Grand Prix,0.0
+EventName_Japanese Grand Prix,0.0
+EventName_Italian Grand Prix,0.0
+Session4TimeOfDay_evening,0.0
+Session4TimeOfDay_morning,0.0
+Session4TimeOfDay_night,0.0
+DriverId_bottas,0.0
+Abbreviation_LEC,0.0
+Abbreviation_MAG,0.0
+Abbreviation_NOR,0.0
+Abbreviation_OCO,0.0
+Abbreviation_PER,0.0
+Abbreviation_PIA,0.0
+Abbreviation_RIC,0.0
+DriverId_ocon,0.0
+Abbreviation_SAI,0.0
+Abbreviation_SAR,0.0
+Abbreviation_STR,0.0
+Abbreviation_VER,0.0
+Abbreviation_ZHO,0.0
+DriverId_albon,0.0
+DriverId_alonso,0.0
+RACE_Pressure_min,0.0
+BroadcastName_A ANTONELLI,0.0
+DriverId_antonelli,0.0
+DriverId_bearman,0.0
+RACEYEAR,0.0
+DriverId_bortoleto,0.0
+Session5TimeOfDay_night,0.0
+Session5TimeOfDay_evening,0.0
+EventName_Hungarian Grand Prix,0.0
+EventName_Dutch Grand Prix,0.0
+OfficialEventName_FORMULA 1 ETIHAD AIRWAYS ABU DHABI GRAND PRIX 2023 ,0.0
+OfficialEventName_FORMULA 1 HEINEKEN SILVER LAS VEGAS GRAND PRIX 2024,0.0
+OfficialEventName_FORMULA 1 PIRELLI GRAN PREMIO D’ITALIA 2023 ,0.0
+OfficialEventName_FORMULA 1 MSC CRUISES JAPANESE GRAND PRIX 2024,0.0
+OfficialEventName_FORMULA 1 MSC CRUISES GRAN PREMIO DEL MADE IN ITALY E DELL'EMILIA-ROMAGNA 2024,0.0
+OfficialEventName_FORMULA 1 MSC CRUISES BELGIAN GRAND PRIX 2023,0.0
+OfficialEventName_FORMULA 1 LOUIS VUITTON AUSTRALIAN GRAND PRIX 2025,0.0
+OfficialEventName_FORMULA 1 LENOVO UNITED STATES GRAND PRIX 2023,0.0
+OfficialEventName_FORMULA 1 LENOVO JAPANESE GRAND PRIX 2025 ,0.0
+OfficialEventName_FORMULA 1 LENOVO JAPANESE GRAND PRIX 2023 ,0.0
+OfficialEventName_FORMULA 1 LENOVO GRANDE PRÊMIO DE SÃO PAULO 2024,0.0
+OfficialEventName_FORMULA 1 LENOVO CHINESE GRAND PRIX 2024,0.0
+OfficialEventName_FORMULA 1 HUNGARIAN GRAND PRIX 2024,0.0
+OfficialEventName_FORMULA 1 HEINEKEN SILVER LAS VEGAS GRAND PRIX 2023,0.0
+EventName_Chinese Grand Prix,0.0
+OfficialEventName_FORMULA 1 HEINEKEN DUTCH GRAND PRIX 2024,0.0
+OfficialEventName_FORMULA 1 HEINEKEN DUTCH GRAND PRIX 2023,0.0
+OfficialEventName_FORMULA 1 HEINEKEN CHINESE GRAND PRIX 2025,0.0
+OfficialEventName_FORMULA 1 GULF AIR BAHRAIN GRAND PRIX 2025,0.0
+OfficialEventName_FORMULA 1 GULF AIR BAHRAIN GRAND PRIX 2024,0.0
+OfficialEventName_FORMULA 1 GULF AIR BAHRAIN GRAND PRIX 2023,0.0
+OfficialEventName_FORMULA 1 GRAND PRIX DE MONACO 2024,0.0
+OfficialEventName_FORMULA 1 GRAND PRIX DE MONACO 2023,0.0
+OfficialEventName_FORMULA 1 GRAN PREMIO DE LA CIUDAD DE MÉXICO 2024,0.0
+OfficialEventName_FORMULA 1 GRAN PREMIO DE LA CIUDAD DE MÉXICO 2023,0.0
+OfficialEventName_FORMULA 1 ETIHAD AIRWAYS ABU DHABI GRAND PRIX 2024,0.0
+OfficialEventName_FORMULA 1 PIRELLI GRAN PREMIO D’ITALIA 2024,0.0
+OfficialEventName_FORMULA 1 PIRELLI GRAND PRIX DU CANADA 2023,0.0
+OfficialEventName_FORMULA 1 PIRELLI UNITED STATES GRAND PRIX 2024,0.0
+OfficialEventName_FORMULA 1 QATAR AIRWAYS AUSTRIAN GRAND PRIX 2024,0.0
+EventName_Canadian Grand Prix,0.0
+EventName_British Grand Prix,0.0
+EventName_Belgian Grand Prix,0.0
+EventName_Bahrain Grand Prix,0.0
+EventName_Azerbaijan Grand Prix,0.0
+EventName_Austrian Grand Prix,0.0
+EventName_Australian Grand Prix,0.0
+EventName_Abu Dhabi Grand Prix,0.0
+OfficialEventName_FORMULA 1 STC SAUDI ARABIAN GRAND PRIX 2025,0.0
+OfficialEventName_FORMULA 1 STC SAUDI ARABIAN GRAND PRIX 2024,0.0
+OfficialEventName_FORMULA 1 STC SAUDI ARABIAN GRAND PRIX 2023,0.0
+OfficialEventName_FORMULA 1 SINGAPORE AIRLINES SINGAPORE GRAND PRIX 2024,0.0
+OfficialEventName_FORMULA 1 SINGAPORE AIRLINES SINGAPORE GRAND PRIX 2023 ,0.0
+OfficialEventName_FORMULA 1 ROLEX GROSSER PREIS VON ÖSTERREICH 2023,0.0
+OfficialEventName_FORMULA 1 ROLEX GRANDE PRÊMIO DE SÃO PAULO 2023,0.0
+OfficialEventName_FORMULA 1 ROLEX BELGIAN GRAND PRIX 2024,0.0
+OfficialEventName_FORMULA 1 ROLEX AUSTRALIAN GRAND PRIX 2024,0.0
+OfficialEventName_FORMULA 1 ROLEX AUSTRALIAN GRAND PRIX 2023,0.0
+OfficialEventName_FORMULA 1 QATAR AIRWAYS QATAR GRAND PRIX 2024,0.0
+OfficialEventName_FORMULA 1 QATAR AIRWAYS QATAR GRAND PRIX 2023,0.0
+OfficialEventName_FORMULA 1 QATAR AIRWAYS HUNGARIAN GRAND PRIX 2023,0.0
+OfficialEventName_FORMULA 1 QATAR AIRWAYS BRITISH GRAND PRIX 2024,0.0
+OfficialEventName_FORMULA 1 QATAR AIRWAYS AZERBAIJAN GRAND PRIX 2024,0.0
+Abbreviation_RUS,0.0

@@ -91,14 +91,20 @@ for col in cols_to_min:
 # FINAL DATA SET(S)
 ##################################################################################################################
 
+columns_to_drop = []
+
+for col in cols_to_min:
+    columns_to_drop.append(col)
+    columns_to_drop.append(f"OverallSession_{col}")
+
 # Clean up duplicate columns
-columns_to_drop = [
+columns_to_drop.extend([
     # Duplicate driver/race identifiers
     "FP1_RACEYEAR", "FP1_RACENUMBER", "FP1_Driver",
     "FP2_RACEYEAR", "FP2_RACENUMBER", "FP2_Driver",
     "FP3_RACEYEAR", "FP3_RACENUMBER", "FP3_Driver",
-    "Driver_x", "Driver_y",
-]
+    "Driver_x", "Driver_y","Time","WinnerTime","WinnerDriver"
+])
 
 # Drop unwanted columns
 final_full_data = final_full_data.drop(columns=columns_to_drop, errors='ignore')
