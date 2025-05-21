@@ -52,8 +52,11 @@ avg_sector_times = (
     .agg(
         Quali_AvgSector1Time_ms=('Sector1Time', 'mean'),
         Quali_AvgSector2Time_ms=('Sector2Time', 'mean'),
-        Quali_AvgSector3Time_ms=('Sector3Time', 'mean')
-    )
+        Quali_AvgSector3Time_ms=('Sector3Time', 'mean'),
+        Quali_FastestSector1Time_ms=('Sector1Time', 'min'),
+        Quali_FastestSector2Time_ms=('Sector2Time', 'min'),
+        Quali_FastestSector3Time_ms=('Sector3Time', 'min')
+    )   
 )
 
 final_quali_data = final_quali_data.merge(avg_sector_times, on=['RACEYEAR', 'RACENUMBER'], how="right")

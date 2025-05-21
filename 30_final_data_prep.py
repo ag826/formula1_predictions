@@ -72,6 +72,25 @@ final_full_data=final_full_data.merge(final_fp2_data, left_on=["RACEYEAR","RACEN
 final_full_data=final_full_data.merge(final_fp3_data, left_on=["RACEYEAR","RACENUMBER","Abbreviation"], right_on=["FP3_RACEYEAR","FP3_RACENUMBER","FP3_Driver"],how="left")
 final_full_data=final_full_data.merge(final_quali_data, left_on=["RACEYEAR","RACENUMBER","Abbreviation"], right_on=["RACEYEAR","RACENUMBER","Abbreviation"],how="left")
 
+cols_to_min = [
+    "FP1_FastestFullLapTime_ms", "FP1_FastestSector1Time_ms", "FP1_FastestSector2Time_ms", "FP1_FastestSector3Time_ms",
+    "FP2_FastestFullLapTime_ms", "FP2_FastestSector1Time_ms", "FP2_FastestSector2Time_ms", "FP2_FastestSector3Time_ms",
+    "FP3_FastestFullLapTime_ms", "FP3_FastestSector1Time_ms", "FP3_FastestSector2Time_ms", "FP3_FastestSector3Time_ms",
+    "Quali_FastestSector1Time_ms", "Quali_FastestSector2Time_ms", "Quali_FastestSector3Time_ms",
+    "Quali_Q1_ms", "Quali_Q2_ms", "Quali_Q3_ms",
+]
+
+fastest_in_every_session=final_full_data.groupby(["RACEYEAR","RACENUMBER"])[cols_to_min].min().reset_index().rename(columns=lambda col: f"OverallSession_{col}" if col not in ["RACEYEAR", "RACENUMBER"] else col)
+
+final_full_data=final_full_data.merge(fastest_in_every_session, left_on=["RACEYEAR","RACENUMBER"], right_on=["RACEYEAR","RACENUMBER"],how="left")
+
+for col in cols_to_min:
+    final_full_data[f"ComparativePace_{col}"] = final_full_data[col] / final_full_data[f"OverallSession_{col}"]
+
+##################################################################################################################
+# FINAL DATA SET(S)
+##################################################################################################################
+
 # Clean up duplicate columns
 columns_to_drop = [
     # Duplicate driver/race identifiers

@@ -47,6 +47,9 @@ full_lap_data["Sector2Time"] = full_lap_data["Sector2Time"].dt.total_seconds() *
 full_lap_data["Sector3Time"] = pd.to_timedelta(full_lap_data["Sector3Time"], errors='coerce')
 full_lap_data["Sector3Time"] = full_lap_data["Sector3Time"].dt.total_seconds() * 1000
 
+full_lap_data["LapTime"] = pd.to_timedelta(full_lap_data["LapTime"], errors='coerce')
+full_lap_data["LapTime"] = full_lap_data["LapTime"].dt.total_seconds() * 1000
+
 # Calculate average and fastest sector times
 avg_sector_times = (
     full_lap_data
@@ -57,7 +60,8 @@ avg_sector_times = (
         FP3_AvgSector2Time_ms=('Sector2Time', 'mean'),
         FP3_FastestSector2Time_ms=('Sector2Time', 'min'),
         FP3_AvgSector3Time_ms=('Sector3Time', 'mean'),
-        FP3_FastestSector3Time_ms=('Sector3Time', 'min')
+        FP3_FastestSector3Time_ms=('Sector3Time', 'min'),
+        FP3_FastestFullLapTime_ms=('LapTime', 'min')
     )
 )
 
@@ -71,8 +75,8 @@ full_lap_data["PitOutTime"] = full_lap_data["PitOutTime"].dt.total_seconds() * 1
 full_lap_data["PitInTime"] = pd.to_timedelta(full_lap_data["PitInTime"], errors='coerce')
 full_lap_data["PitInTime"] = full_lap_data["PitInTime"].dt.total_seconds() * 1000
 
-full_lap_data["LapTime"] = pd.to_timedelta(full_lap_data["LapTime"], errors='coerce')
-full_lap_data["LapTime"] = full_lap_data["LapTime"].dt.total_seconds() * 1000
+# full_lap_data["LapTime"] = pd.to_timedelta(full_lap_data["LapTime"], errors='coerce')
+# full_lap_data["LapTime"] = full_lap_data["LapTime"].dt.total_seconds() * 1000
 
 full_lap_data = full_lap_data.sort_values(['RACEYEAR', 'RACENUMBER', 'Driver', 'Stint', 'LapNumber'])
 
