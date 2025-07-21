@@ -351,7 +351,7 @@ plt.show()
 
 # Get distinct track corner data
 track_structure = df[["Location", "fast", "medium", "slow"]].drop_duplicates()
-track_structure = track_structure.sort_values(by='Location').reset_index(drop=True)
+track_structure = track_structure.sort_values(by='fast').reset_index(drop=True)
 
 fig, ax = plt.subplots(figsize=(15, 10))
 
