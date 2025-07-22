@@ -23,19 +23,19 @@ fp3_data: init
 # ----------------------------------------------------------------------------------
 
 # Data aggregation targets
-agg_race: extract_all
+agg_race: init
 	python 20_race_data_aggregating.py
 
-agg_quali: extract_all
+agg_quali: init	
 	python 21_quali_data_aggregating.py
 
-agg_fp1: extract_all
+agg_fp1: init
 	python 22_fp1_data_aggregating.py
 
-agg_fp2: extract_all
+agg_fp2: init
 	python 23_fp2_data_aggregating.py
 
-agg_fp3: extract_all
+agg_fp3: init
 	python 24_fp3_data_aggregating.py
 
 # ----------------------------------------------------------------------------------
@@ -53,8 +53,12 @@ extract_all: race_data quali_data fp1_data fp2_data fp3_data
 	@echo "All data extraction completed successfully!"
 
 final_prep: agg_race agg_quali agg_fp1 agg_fp2 agg_fp3
-	python 30__final_data_prep.py
+	python 30_final_data_prep.py
 	@echo "Final data preparation completed successfully!"
+
+analytics: init
+	python 31_general_analytics.py
+	@echo "Analytics completed successfully!"
 
 analyze_all: winner_prediction position_prediction
 	@echo "All analysis completed successfully!"

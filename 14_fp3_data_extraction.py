@@ -26,7 +26,7 @@ all_event_metadata = []
 # ---------------------------------------------------
 
 # Year range
-for year in range(2023, 2026):
+for year in range(2022, 2026):
     schedule = fastf1.get_event_schedule(year, include_testing=False)
     race_numbers = schedule["RoundNumber"].dropna().astype(int)
 
@@ -68,8 +68,10 @@ for year in range(2023, 2026):
 if all_weather:
     pd.concat(all_weather).to_csv("RAW_DATA/FP3_DATA/FP3_weather_data.csv", index=False)
 if all_track_status:
-    pd.concat(all_track_status).to_csv("RAW_DATA/FP3_DATA/FP3_track_status.csv", index=False)
+    pd.concat(all_track_status).to_csv(
+        "RAW_DATA/FP3_DATA/FP3_track_status.csv", index=False
+    )
 if all_laps:
     pd.concat(all_laps).to_csv("RAW_DATA/FP3_DATA/FP3_lap_data.csv", index=False)
 
-print("✅ All requested FP3 session data saved to CSV.") 
+print("✅ All requested FP3 session data saved to CSV.")
