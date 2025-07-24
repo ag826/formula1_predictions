@@ -16,13 +16,13 @@ from sklearn.preprocessing import MinMaxScaler
 df = pd.read_csv("PROCESSED_DATA/final_full_data.csv")
 
 # Filter necessary columns
-df_points = df[["RACEYEAR", "RACENUMBER", "DriverId", "Points"]].copy()
+df_points = df[["RACEYEAR", "RACENUMBER", "DriverNameMapped", "Points"]].copy()
 
 # Sort by year, race number
-df_points = df_points.sort_values(["DriverId", "RACEYEAR", "RACENUMBER"])
+df_points = df_points.sort_values(["DriverNameMapped", "RACEYEAR", "RACENUMBER"])
 
 # Calculate cumulative points per driver
-df_points["CumulativePoints"] = df_points.groupby("DriverId")["Points"].cumsum()
+df_points["CumulativePoints"] = df_points.groupby("DriverNameMapped")["Points"].cumsum()
 
 # Create a combined race identifier for x-axis
 df_points["Race"] = (
@@ -31,7 +31,7 @@ df_points["Race"] = (
 
 # Pivot for plotting: rows = race, columns = driver, values = cumulative points
 pivot = df_points.pivot_table(
-    index="Race", columns="DriverId", values="CumulativePoints"
+    index="Race", columns="DriverNameMapped", values="CumulativePoints"
 )
 
 # Extract year and race number as integers
@@ -75,13 +75,13 @@ plt.show()
 ##################################################################################################################
 
 # Filter necessary columns for team points
-df_team = df[["RACEYEAR", "RACENUMBER", "TeamName", "Points"]].copy()
+df_team = df[["RACEYEAR", "RACENUMBER", "TeamNameMapped", "Points"]].copy()
 
 # Sort by year, race number
-df_team = df_team.sort_values(["TeamName", "RACEYEAR", "RACENUMBER"])
+df_team = df_team.sort_values(["TeamNameMapped", "RACEYEAR", "RACENUMBER"])
 
 # Calculate cumulative points per team
-df_team["CumulativePoints"] = df_team.groupby("TeamName")["Points"].cumsum()
+df_team["CumulativePoints"] = df_team.groupby("TeamNameMapped")["Points"].cumsum()
 
 # Create a combined race identifier for x-axis
 df_team["Race"] = (
@@ -90,7 +90,7 @@ df_team["Race"] = (
 
 # Pivot for plotting: rows = race, columns = team, values = cumulative points
 pivot_team = df_team.pivot_table(
-    index="Race", columns="TeamName", values="CumulativePoints"
+    index="Race", columns="TeamNameMapped", values="CumulativePoints"
 )
 
 # Extract year and race number as integers
@@ -135,14 +135,14 @@ plt.show()
 
 
 # (Assume 'Grid Position' is qualifying, 'Position' is race result)
-df_avg = df[["DriverId", "GridPosition", "Position"]].copy()
+df_avg = df[["DriverNameMapped", "GridPosition", "Position"]].copy()
 
 # Remove rows with missing positions
 df_avg = df_avg.dropna(subset=["GridPosition", "Position"])
 
 # Group by driver and calculate mean positions
 avg_positions = (
-    df_avg.groupby(["DriverId"])
+    df_avg.groupby(["DriverNameMapped"])
     .agg({"GridPosition": "mean", "Position": "mean"})
     .reset_index()
 )
@@ -182,7 +182,7 @@ for i, row in enumerate(avg_positions.itertuples()):
     )
 
 ax.set_yticks(y)
-ax.set_yticklabels(avg_positions["DriverId"])
+ax.set_yticklabels(avg_positions["DriverNameMapped"])
 ax.set_xlabel("Average Position (Lower is Better)")
 ax.set_title("Average Grid (Qualifying) vs Final Race Position per Driver")
 ax.legend()
@@ -518,10 +518,14 @@ numeric_scaled = pd.DataFrame(
 )
 
 # Step 3: Combine normalized numeric features and location dummies with BroadcastName
-features = pd.concat([df[["DriverId"]], numeric_scaled, location_dummies], axis=1)
+features = pd.concat(
+    [df[["DriverNameMapped"]], numeric_scaled, location_dummies], axis=1
+)
 
 # Step 4: Group by 'BroadcastName' and compute mean
-driver_features = features.groupby("DriverId").mean().T  # transpose for heatmap layout
+driver_features = (
+    features.groupby("DriverNameMapped").mean().T
+)  # transpose for heatmap layout
 
 # Step 5: Plot heatmap with values shown
 plt.figure(figsize=(20, len(driver_features) * 0.5))
@@ -556,10 +560,12 @@ numeric_scaled = pd.DataFrame(
 )
 
 # Step 3: Combine normalized numeric features and location dummies with BroadcastName
-features = pd.concat([df[["TeamName"]], numeric_scaled, location_dummies], axis=1)
+features = pd.concat([df[["TeamNameMapped"]], numeric_scaled, location_dummies], axis=1)
 
 # Step 4: Group by 'BroadcastName' and compute mean
-driver_features = features.groupby("TeamName").mean().T  # transpose for heatmap layout
+driver_features = (
+    features.groupby("TeamNameMapped").mean().T
+)  # transpose for heatmap layout
 
 # Step 5: Plot heatmap with values shown
 plt.figure(figsize=(10, len(driver_features) * 0.5))
@@ -585,7 +591,9 @@ plt.show()
 
 pitstop_df = df[df["RACE_AvgPitStopDuration_ms"] < 55000]
 avg_pitstop_by_team = (
-    pitstop_df.groupby("TeamId")["RACE_AvgPitStopDuration_ms"].mean().sort_values()
+    pitstop_df.groupby("TeamNameMapped")["RACE_AvgPitStopDuration_ms"]
+    .mean()
+    .sort_values()
 )
 avg_pitstop_by_team = avg_pitstop_by_team / 1000  # Convert ms to seconds
 
@@ -593,7 +601,7 @@ plt.figure(figsize=(10, 6))
 bars = plt.barh(
     avg_pitstop_by_team.index.astype(str), avg_pitstop_by_team.values, color="skyblue"
 )
-plt.ylabel("TeamId")
+plt.ylabel("TeamNameMapped")
 plt.xlabel("Average Pit Stop Duration (seconds)")
 plt.title("Average Pit Stop Duration by Team (Pitstops < 55,000 ms)")
 plt.xlim(23.5, 26)  # Set X axis between 23 and 26 seconds

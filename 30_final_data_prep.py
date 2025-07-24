@@ -143,6 +143,61 @@ for col in cols_to_min:
     )
 
 ##################################################################################################################
+# Mapping team and driver names
+##################################################################################################################
+
+team_mapping = {
+    "ferrari": "Ferrari",
+    "mercedes": "Mercedes-AMG Petronas F1 Team",
+    "haas": "MoneyGram Haas F1 Team",
+    "alfa": "Alfa Romeo",
+    "alpine": "BWT Alpine F1 Team",
+    "alphatauri": "Visa Cash App RB Formula One Team",
+    "aston_martin": "Aston Martin Aramco F1 Team",
+    "williams": "Williams Racing",
+    "mclaren": "McLaren Formula 1 Team",
+    "red_bull": "Oracle Red Bull Racing",
+    "sauber": "Stake F1 Team Kick Sauber",
+    "rb": "Visa Cash App RB Formula One Team",
+}
+
+
+driver_mapping = {
+    "leclerc": "Charles Leclerc",
+    "sainz": "Carlos Sainz",
+    "hamilton": "Lewis Hamilton",
+    "russell": "George Russell",
+    "kevin_magnussen": "Kevin Magnussen",
+    "bottas": "Valtteri Bottas",
+    "ocon": "Esteban Ocon",
+    "tsunoda": "Yuki Tsunoda",
+    "alonso": "Fernando Alonso",
+    "zhou": "Zhou Guanyu",
+    "mick_schumacher": "Mick Schumacher",
+    "stroll": "Lance Stroll",
+    "albon": "Alexander Albon",
+    "ricciardo": "Daniel Ricciardo",
+    "norris": "Lando Norris",
+    "latifi": "Nicholas Latifi",
+    "hulkenberg": "Nico Hülkenberg",
+    "perez": "Sergio Pérez",
+    "max_verstappen": "Max Verstappen",
+    "gasly": "Pierre Gasly",
+    "vettel": "Sebastian Vettel",
+    "de_vries": "Nyck de Vries",
+    "sargeant": "Logan Sargeant",
+    "piastri": "Oscar Piastri",
+    "lawson": "Liam Lawson",
+    "bearman": "Oliver Bearman",
+    "colapinto": "Franco Colapinto",
+    "doohan": "Jack Doohan",
+    "antonelli": "Andrea Kimi Antonelli",
+    "bortoleto": "Gabriele Bortoleto",
+    "hadjar": "Isack Hadjar",
+}
+
+
+##################################################################################################################
 # FINAL DATA SET(S)
 ##################################################################################################################
 
@@ -175,6 +230,10 @@ columns_to_drop.extend(
 
 # Drop unwanted columns
 final_full_data = final_full_data.drop(columns=columns_to_drop, errors="ignore")
+
+
+final_full_data["DriverNameMapped"] = final_full_data["DriverId"].map(driver_mapping)
+final_full_data["TeamNameMapped"] = final_full_data["TeamId"].map(team_mapping)
 
 # Save without index
 final_full_data.to_csv("PROCESSED_DATA/final_full_data.csv", index=False)
@@ -233,6 +292,14 @@ columns_to_drop = [
 ]
 
 final_full_data_only_fp_predictors = final_full_data.drop(columns=columns_to_drop)
+
+final_full_data_only_fp_predictors["DriverNameMapped"] = (
+    final_full_data_only_fp_predictors["DriverId"].map(driver_mapping)
+)
+
+final_full_data_only_fp_predictors["TeamNameMapped"] = (
+    final_full_data_only_fp_predictors["TeamId"].map(team_mapping)
+)
 
 final_full_data_only_fp_predictors.to_csv(
     "PROCESSED_DATA/final_full_data_only_fp_predictors.csv"
