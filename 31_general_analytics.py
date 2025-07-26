@@ -9,13 +9,12 @@ from sklearn.preprocessing import MinMaxScaler
 import colorsys  # For HSL color manipulation
 from matplotlib.colors import to_rgb  # To convert matplotlib colors to RGB tuple
 
-##################################################################################################################
-# DRIVER POINTS OVER TIME
-##################################################################################################################
-
-
 # Load the data
 df = pd.read_csv("PROCESSED_DATA/final_full_data.csv")
+
+##################################################################################################################
+# DRIVER POINTS OVER TIME - CUMULATIVE
+##################################################################################################################
 
 # Filter necessary columns
 df_points = df[["RACEYEAR", "RACENUMBER", "DriverNameMapped", "Points"]].copy()
@@ -57,6 +56,7 @@ for i, (driver, data) in enumerate(pivot.items()):
         marker="o",
         label=driver,
         color=colors[i % len(colors)],
+        markersize=3,
     )
 
 # Set x-tick labels to show (Year, RaceNumber)
@@ -73,7 +73,112 @@ plt.show()
 
 
 ##################################################################################################################
-# TEAM POINTS OVER TIME
+# DRIVER POINTS OVER TIME - BROKEN BY YEAR
+##################################################################################################################
+
+
+# --- DRIVER COLORS ---
+drivers = sorted(df["DriverNameMapped"].dropna().unique())
+driver_color_map = {driver: plt.cm.tab20(i % 20) for i, driver in enumerate(drivers)}
+
+years = sorted(df["RACEYEAR"].unique())
+
+# --- DRIVER POINTS ---
+df_points = df[["RACEYEAR", "RACENUMBER", "DriverNameMapped", "Points"]].copy()
+df_points = df_points.sort_values(["DriverNameMapped", "RACEYEAR", "RACENUMBER"])
+df_points["CumulativePoints"] = df_points.groupby(["DriverNameMapped", "RACEYEAR"])[
+    "Points"
+].cumsum()
+
+# --- Build shared x-axis: one entry per race, with year and race number ---
+race_tuples = sorted(df[["RACEYEAR", "RACENUMBER"]].drop_duplicates().values.tolist())
+race_labels = [f"{year}-{race}" for year, race in race_tuples]
+race_index_map = {(year, race): idx for idx, (year, race) in enumerate(race_tuples)}
+
+# --- Find year boundaries for vertical lines ---
+year_boundaries = []
+prev_year = race_tuples[0][0]
+for idx, (year, race) in enumerate(race_tuples):
+    if year != prev_year:
+        year_boundaries.append(idx)
+        prev_year = year
+
+fig, ax_driver = plt.subplots(1, 1, figsize=(18, 8), sharex=True)
+
+# --- Plotting Driver Lines, Avoiding Duplicate Labels ---
+plotted_drivers = set()
+
+for driver in drivers:
+    x_points = []
+    y_points = []
+    for year, race in race_tuples:
+        sub = df_points[
+            (df_points["DriverNameMapped"] == driver)
+            & (df_points["RACEYEAR"] == year)
+            & (df_points["RACENUMBER"] == race)
+        ]
+        if not sub.empty:
+            x_points.append(race_index_map[(year, race)])
+            y_points.append(sub.iloc[0]["CumulativePoints"])
+    # Split by year boundaries
+    boundaries = [0] + year_boundaries + [len(race_tuples)]
+    for i in range(len(boundaries) - 1):
+        start, end = boundaries[i], boundaries[i + 1]
+        indices = [j for j, x in enumerate(x_points) if start <= x < end]
+        if indices:
+            seg_x = [x_points[j] for j in indices]
+            seg_y = [y_points[j] for j in indices]
+            ax_driver.plot(
+                seg_x,
+                seg_y,
+                marker="o",
+                label=driver if driver not in plotted_drivers else None,
+                color=driver_color_map[driver],
+                linewidth=2,
+                markersize=4,
+            )
+    plotted_drivers.add(driver)
+
+# --- Axis & Title ---
+ax_driver.set_ylabel("Cumulative Points (Driver)")
+ax_driver.set_title("Driver Points Over Time (Points Reset Each Year)")
+ax_driver.set_xticks(range(len(race_labels)))
+ax_driver.set_xticklabels(race_labels, rotation=90)
+
+# --- Draw vertical lines for year boundaries ---
+for boundary in year_boundaries:
+    ax_driver.axvline(
+        boundary - 0.5, color="black", linestyle="--", linewidth=1.5, alpha=0.7
+    )
+    ax_driver.text(
+        boundary,
+        ax_driver.get_ylim()[1],
+        f"{race_tuples[boundary][0]}",
+        color="black",
+        fontsize=12,
+        ha="center",
+        va="bottom",
+    )
+
+# --- Clean legend (unique and sorted alphabetically) ---
+handles, labels = ax_driver.get_legend_handles_labels()
+by_label = dict(sorted(zip(labels, handles), key=lambda x: (x[0] is None, x[0])))
+ax_driver.legend(
+    by_label.values(),
+    by_label.keys(),
+    title="Driver",
+    bbox_to_anchor=(1.01, 1),
+    loc="upper left",
+    fontsize=8,
+)
+
+plt.xlabel("Race (Year-Number)")
+plt.tight_layout()
+plt.savefig("ANALYTICS/DRIVER_POINTS_OVER_TIME_BY_YEAR.png")
+plt.show()
+
+##################################################################################################################
+# TEAM POINTS OVER TIME - CUMULATIVE
 ##################################################################################################################
 
 # Filter necessary columns for team points
@@ -116,6 +221,7 @@ for i, (team, data) in enumerate(pivot_team.items()):
         marker="o",
         label=team,
         color=colors[i % len(colors)],
+        markersize=3,
     )
 
 # Set x-tick labels to show (Year, RaceNumber)
@@ -132,11 +238,120 @@ plt.show()
 
 
 ##################################################################################################################
+# TEAM POINTS OVER TIME - BROKEN BY YEAR
+##################################################################################################################
+
+# --- TEAM COLORS ---
+teams = sorted(df["TeamNameMapped"].dropna().unique())
+team_color_map = {team: plt.cm.tab20(i % 20) for i, team in enumerate(teams)}
+
+years = sorted(df["RACEYEAR"].unique())
+
+# --- TEAM POINTS ---
+df_team_points = df[["RACEYEAR", "RACENUMBER", "TeamNameMapped", "Points"]].copy()
+df_team_points = (
+    df_team_points.groupby(["RACEYEAR", "RACENUMBER", "TeamNameMapped"])
+    .sum()
+    .reset_index()
+)
+df_team_points = df_team_points.sort_values(
+    ["TeamNameMapped", "RACEYEAR", "RACENUMBER"]
+)
+df_team_points["CumulativePoints"] = df_team_points.groupby(
+    ["TeamNameMapped", "RACEYEAR"]
+)["Points"].cumsum()
+
+# --- Build shared x-axis: one entry per race, with year and race number ---
+race_tuples = sorted(df[["RACEYEAR", "RACENUMBER"]].drop_duplicates().values.tolist())
+race_labels = [f"{year}-{race}" for year, race in race_tuples]
+race_index_map = {(year, race): idx for idx, (year, race) in enumerate(race_tuples)}
+
+# --- Find year boundaries for vertical lines ---
+year_boundaries = []
+prev_year = race_tuples[0][0]
+for idx, (year, race) in enumerate(race_tuples):
+    if year != prev_year:
+        year_boundaries.append(idx)
+        prev_year = year
+
+fig, ax_team = plt.subplots(1, 1, figsize=(18, 8), sharex=True)
+
+# --- Plotting Team Lines, Avoiding Duplicate Labels ---
+plotted_teams = set()
+
+for team in teams:
+    x_points = []
+    y_points = []
+    for year, race in race_tuples:
+        sub = df_team_points[
+            (df_team_points["TeamNameMapped"] == team)
+            & (df_team_points["RACEYEAR"] == year)
+            & (df_team_points["RACENUMBER"] == race)
+        ]
+        if not sub.empty:
+            x_points.append(race_index_map[(year, race)])
+            y_points.append(sub.iloc[0]["CumulativePoints"])
+    # Split by year boundaries
+    boundaries = [0] + year_boundaries + [len(race_tuples)]
+    for i in range(len(boundaries) - 1):
+        start, end = boundaries[i], boundaries[i + 1]
+        indices = [j for j, x in enumerate(x_points) if start <= x < end]
+        if indices:
+            seg_x = [x_points[j] for j in indices]
+            seg_y = [y_points[j] for j in indices]
+            ax_team.plot(
+                seg_x,
+                seg_y,
+                marker="o",
+                label=team if team not in plotted_teams else None,
+                color=team_color_map[team],
+                linewidth=2,
+                markersize=4,
+            )
+    plotted_teams.add(team)
+
+# --- Axis & Title ---
+ax_team.set_ylabel("Cumulative Points (Team)")
+ax_team.set_title("Team Points Over Time (Points Reset Each Year)")
+ax_team.set_xticks(range(len(race_labels)))
+ax_team.set_xticklabels(race_labels, rotation=90)
+
+# --- Draw vertical lines for year boundaries ---
+for boundary in year_boundaries:
+    ax_team.axvline(
+        boundary - 0.5, color="black", linestyle="--", linewidth=1.5, alpha=0.7
+    )
+    ax_team.text(
+        boundary,
+        ax_team.get_ylim()[1],
+        f"{race_tuples[boundary][0]}",
+        color="black",
+        fontsize=12,
+        ha="center",
+        va="bottom",
+    )
+
+# --- Clean legend (unique and sorted alphabetically) ---
+handles, labels = ax_team.get_legend_handles_labels()
+by_label = dict(sorted(zip(labels, handles), key=lambda x: (x[0] is None, x[0])))
+ax_team.legend(
+    by_label.values(),
+    by_label.keys(),
+    title="Team",
+    bbox_to_anchor=(1.01, 1),
+    loc="upper left",
+    fontsize=8,
+)
+
+plt.xlabel("Race (Year-Number)")
+plt.tight_layout()
+plt.savefig("ANALYTICS/TEAM_POINTS_OVER_TIME_BY_YEAR.png")
+plt.show()
+
+##################################################################################################################
 # DRIVER: AVERAGE GRID POSITION VS FINAL POSITION
 ##################################################################################################################
 
-
-# (Assume 'Grid Position' is qualifying, 'Position' is race result)
 df_avg = df[["DriverNameMapped", "GridPosition", "Position"]].copy()
 
 # Remove rows with missing positions
@@ -183,6 +398,10 @@ for i, row in enumerate(avg_positions.itertuples()):
         alpha=0.7,
     )
 
+# Add vertical lines at x=10 and x=3
+ax.axvline(x=10, color="blue", linestyle=":", linewidth=2, label="x=10")
+ax.axvline(x=3, color="orange", linestyle=":", linewidth=2, label="x=3")
+
 ax.set_yticks(y)
 ax.set_yticklabels(avg_positions["DriverNameMapped"])
 ax.set_xlabel("Average Position (Lower is Better)")
@@ -192,7 +411,6 @@ ax.invert_xaxis()  # Lower (better) positions to the right
 plt.tight_layout()
 plt.savefig("ANALYTICS/DRIVER_AVG_GRID_VS_FINAL_POSITION_DOTPLOT.png")
 plt.show()
-
 
 ##################################################################################################################
 # Average top speed on tyre compounds per race
@@ -750,7 +968,67 @@ plt.legend(
 # --- Save and show ---
 plt.tight_layout()
 plt.savefig("ANALYTICS/AVG_PITSTOP_DURATION_BY_TEAM_AND_DRIVER_DOT_PLOT.png")
+plt.show()
 
+##################################################################################################################
+# WEATHER, HYMIDITY AND TYRE TEMPERATURE
+##################################################################################################################
+
+# Group by Location and calculate mean for each feature
+weather_means = (
+    df.groupby("Location")[
+        ["RACE_AirTemp_mean", "RACE_Humidity_mean", "RACE_TrackTemp_mean"]
+    ]
+    .mean()
+    .reset_index()
+)
+weather_means["total"] = (
+    weather_means["RACE_AirTemp_mean"]
+    + weather_means["RACE_Humidity_mean"]
+    + weather_means["RACE_TrackTemp_mean"]
+)
+
+
+# Sort tracks by air temp for better visualization (optional)
+weather_means = weather_means.sort_values("total", ascending=False)
+
+fig, ax = plt.subplots(figsize=(16, 10))
+
+bar_width = 0.6
+x = np.arange(len(weather_means))
+
+# Plot stacked bars
+ax.bar(
+    x,
+    weather_means["RACE_AirTemp_mean"],
+    width=bar_width,
+    label="Avg. Air Temp (°C)",
+    color="tab:blue",
+)
+ax.bar(
+    x,
+    weather_means["RACE_Humidity_mean"],
+    width=bar_width,
+    bottom=weather_means["RACE_AirTemp_mean"],
+    label="Avg. Humidity (%)",
+    color="tab:orange",
+)
+ax.bar(
+    x,
+    weather_means["RACE_TrackTemp_mean"],
+    width=bar_width,
+    bottom=weather_means["RACE_AirTemp_mean"] + weather_means["RACE_Humidity_mean"],
+    label="Avg. Track Temp (°C)",
+    color="tab:green",
+)
+
+ax.set_xticks(x)
+ax.set_xticklabels(weather_means["Location"], rotation=45, ha="right")
+ax.set_ylabel("Mean Value")
+ax.set_title("Mean Air Temp, Humidity, and Track Temp per Track (Stacked Bar)")
+ax.legend(title="Feature")
+plt.tight_layout()
+plt.savefig("ANALYTICS/AVG_WEATHER_TRACK_TEMP_HUMIDITY.png")
 plt.show()
 
 ##################################################################################################################
